@@ -64,13 +64,7 @@ public class PlantMainFragment extends Fragment {
         HashMap<String, String> user = db.getUserDetails();
         plant = user.get("plant");
 
-/*
-        if(plant == "null") {
-            plantReg = 0;
-        } else plantReg = 1;
-
-        plantReg = 0;*/
-        if(!AppController.getInstance().getIsPlantRegister()) {
+        if(Integer.parseInt(plant) == 0) {
             view = inflater.inflate(R.layout.fragment_no_plant_main, null);
 
             ImageButton addPlantImageBtn = (ImageButton)view.findViewById(R.id.btn_add_plant_image);
@@ -147,7 +141,6 @@ public class PlantMainFragment extends Fragment {
                 return e.toString();
             }
             try {
-
                 // Setup HttpURLConnection class to send and receive data from php and mysql
                 conn = (HttpURLConnection) url.openConnection();
                 conn.setReadTimeout(READ_TIMEOUT);

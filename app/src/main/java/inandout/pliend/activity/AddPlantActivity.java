@@ -119,13 +119,8 @@ public class AddPlantActivity extends AppCompatActivity {
                     boolean error = jObj.getBoolean("error");
                     if (!error) {
                         Toast.makeText(getApplicationContext(), "식물 등록에 성공했습니다!", Toast.LENGTH_LONG).show();
+                        db.updatePlant(email);
                         Log.d("등록 성공", "1");
-                        String uid = jObj.getString("uid");
-
-                        JSONObject plant = jObj.getJSONObject("plant");
-                        String name = plant.getString("name");
-                        String email = plant.getString("email");
-                        String created_at = plant.getString("created_at");
 
                         // Inserting row in users table
                         AppController.getInstance().setIsPlantRegister(true);
