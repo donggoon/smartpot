@@ -30,6 +30,7 @@
             android:background="@color/colorInput"
             android:hint="@string/plant_name"
             android:padding="10dp"
+            android:inputType="textCapWords"
             android:textColor="@color/input_register"
             android:textColorHint="@color/input_register_hint" />
 
@@ -41,6 +42,7 @@
             android:background="@color/colorInput"
             android:hint="@string/plant_birth"
             android:padding="10dp"
+            android:inputType="textCapWords"
             android:textColor="@color/input_register"
             android:textColorHint="@color/input_register_hint" />
 
@@ -52,6 +54,7 @@
             android:background="@color/colorInput"
             android:hint="@string/plant_type"
             android:padding="10dp"
+            android:inputType="textCapWords"
             android:textColor="@color/input_register"
             android:textColorHint="@color/input_register_hint" />
         <!-- Login Button -->

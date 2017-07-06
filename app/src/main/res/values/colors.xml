@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#E8F5E9</color>
+    <color name="colorPrimary">#FFFFFF</color>
     <color name="colorPrimaryDark">#4CAF50</color>
     <color name="colorAccent">#FF4081</color>
     <color name="colorButton">#CDDC39</color>
-    <color name="colorInput">#ffffff</color>
+    <color name="colorInput">#E8F5E9</color>
     <color name="bg_login">#ffffff</color>
     <color name="bg_register">#FDF7E9</color>
     <color name="bg_main">#428bca</color>

@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Log.d("1", "check1");
 
         if(Build.VERSION.SDK_INT>=21){
-            getWindow().setStatusBarColor(Color.parseColor("#4CAF50"));
+            getWindow().setStatusBarColor(Color.parseColor("#43A047"));
         }
 
         // SqLite database handler
@@ -84,12 +84,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // Initializing the TabLayout
         tabLayout = (TabLayout) findViewById(R.id.tabLayout);
         tabLayout.addTab(tabLayout.newTab().setText("식물").setIcon(R.drawable.home_tab));
-        tabLayout.setBackgroundColor(Color.parseColor("#4CAF50"));
+        tabLayout.setBackgroundColor(Color.parseColor("#E8F5E9"));
+        tabLayout.setTabTextColors(getResources().getColor(R.color.white), getResources().getColor(R.color.black));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         tabLayout = (TabLayout) findViewById(R.id.tabLayout);
         tabLayout.addTab(tabLayout.newTab().setText("기기").setIcon(R.drawable.reg_tab));
-        tabLayout.setBackgroundColor(Color.parseColor("#4CAF50"));
+        tabLayout.setBackgroundColor(Color.parseColor("#E8F5E9"));
+        tabLayout.setTabTextColors(getResources().getColor(R.color.white), getResources().getColor(R.color.black));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         // Initializing ViewPager
@@ -112,7 +114,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
-
             }
 
             @Override

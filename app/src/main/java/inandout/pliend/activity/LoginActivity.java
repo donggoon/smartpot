@@ -55,7 +55,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         if(Build.VERSION.SDK_INT>=21){
-            getWindow().setStatusBarColor(Color.parseColor("#4CAF50"));
+            getWindow().setStatusBarColor(Color.parseColor("#43A047"));
         }
 
         inputEmail = (EditText) findViewById(R.id.email);
@@ -148,13 +148,17 @@ public class LoginActivity extends AppCompatActivity {
                         JSONObject user = jObj.getJSONObject("user");
                         String name = user.getString("name");
                         String email = user.getString("email");
-                        String created_at = user
-                                .getString("created_at");
+                        String created_at = user.getString("created_at");
+                        String plant = user.getString("plant");
+                        String machine = user.getString("machine");
 
+                        Log.d("plant", plant);
                         // Inserting row in users table
                         db.addUser(name, email, uid, created_at);
 
-                        AppController.getInstance().setUserEmail(email);
+                        if(plant != "null") {
+                            db.updatePlant(email);
+                        }
 
                         // Launch main activity
                         Intent intent = new Intent(LoginActivity.this,

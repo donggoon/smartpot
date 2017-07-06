@@ -209,8 +209,8 @@ public class PlantMainFragment extends Fragment {
 
             if(result.equals("no rows")) {
             } else{
-
                 try {
+                    db.updatePlant(email);
                     JSONArray jArray = new JSONArray(result);
 
                     JSONObject json_data = jArray.getJSONObject(0);

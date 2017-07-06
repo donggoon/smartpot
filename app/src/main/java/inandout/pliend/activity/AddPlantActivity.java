@@ -52,7 +52,7 @@ public class AddPlantActivity extends AppCompatActivity {
         appController = (AppController)getApplicationContext();
 
         if(Build.VERSION.SDK_INT>=21){
-            getWindow().setStatusBarColor(Color.parseColor("#FFBB00"));
+            getWindow().setStatusBarColor(Color.parseColor("#43A047"));
         }
         // SqLite database handler
         db = new SQLiteHandler(getApplicationContext());
