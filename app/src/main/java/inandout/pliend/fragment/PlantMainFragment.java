@@ -36,7 +36,6 @@ import java.net.URL;
 import inandout.pliend.R;
 import inandout.pliend.activity.AddPlantActivity;
 import inandout.pliend.app.AppConfig;
-import inandout.pliend.app.AppController;
 import inandout.pliend.helper.SQLiteHandler;
 import inandout.pliend.store.DataStore;
 
@@ -48,7 +47,6 @@ public class PlantMainFragment extends Fragment {
     private SQLiteHandler db;
     String plant;
     String email;
-    int plantReg;
 
     TextView textName;
     TextView textBirth;

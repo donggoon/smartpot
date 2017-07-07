@@ -91,7 +91,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         tabLayout = (TabLayout) findViewById(R.id.tabLayout);
         tabLayout.addTab(tabLayout.newTab().setText("기기").setIcon(R.drawable.reg_tab));
         tabLayout.setBackgroundColor(Color.parseColor("#E8F5E9"));
-        tabLayout.setTabTextColors(getResources().getColor(R.color.white), getResources().getColor(R.color.black));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         // Initializing ViewPager
@@ -163,24 +162,28 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-        /*
-        if(id == R.id.nav_introduce){
+
+        /* if(id == R.id.nav_introduce){
             Intent i = new Intent(this, IntroActivity.class);
             startActivity(i);
-        }
-        else if (id == R.id.nav_mypage) {
+        }*/
+
+        if (id == R.id.nav_mypage) {
             Intent i = new Intent(this, MypageActivity.class);
             startActivity(i);
-        } else if (id == R.id.nav_notice) {
+        }
+        /*
+        else if (id == R.id.nav_notice) {
             Intent i = new Intent(this, NoticeActivity.class);
             startActivity(i);
-        }
-        */
-        if(id == R.id.nav_logout){
+        }*/
+
+        else if(id == R.id.nav_logout){
             logoutUser();
             Intent i = new Intent(this, LoginActivity.class);
             startActivity(i);
         }
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;

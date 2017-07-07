@@ -7,11 +7,17 @@
             android:id="@+id/nav_introduce"
             android:title="소개"/>
         <item
+            android:id="@+id/nav_detail"
+            android:title="식물 상세정보" />
+        <item
+            android:id="@+id/nav_analyze"
+            android:title="성장도 분석" />
+        <item
+            android:id="@+id/nav_quest"
+            android:title="퀘스트" />
+        <item
             android:id="@+id/nav_mypage"
             android:title="마이페이지" />
-        <item
-            android:id="@+id/nav_notice"
-            android:title="공지사항" />
         <item
             android:id="@+id/nav_logout"
             android:title="로그아웃" />
