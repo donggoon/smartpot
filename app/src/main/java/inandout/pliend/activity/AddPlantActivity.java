@@ -2,7 +2,6 @@ package inandout.pliend.activity;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -63,7 +62,7 @@ public class AddPlantActivity extends AppCompatActivity {
 
         email = user.get("email");
 
-        addPlantBtn = (Button) findViewById(R.id.btn_add_plant);
+        addPlantBtn = (Button) findViewById(R.id.btn_add);
         linkToMainBtn = (Button) findViewById(R.id.btn_link_to_no_plant);
 
         editName = (EditText) findViewById(R.id.plant_name);

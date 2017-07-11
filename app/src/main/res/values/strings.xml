@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Pliend</string>
+    <string name="app_name">내 친구 식물이</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="gain_license">개인정보 이용약관</string>
@@ -25,4 +25,9 @@
     <string name="plant_type">종류</string>
     <string name="plant_level">레벨</string>
     <string name="btn_add_plant">식물 등록</string>
+
+    <string name="action_add_favourite">Add to Favourites</string>
+    <string name="action_play_next">Play Next</string>
+    <string name="backdrop_title">LOVE MUSIC</string>
+    <string name="backdrop_subtitle">This season top 20 albums</string>
 </resources>

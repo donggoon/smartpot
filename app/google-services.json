@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "765560159149",
+    "firebase_url": "https://smartpot-cdd39.firebaseio.com",
+    "project_id": "smartpot-cdd39",
+    "storage_bucket": "smartpot-cdd39.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:765560159149:android:a8230f62aa097fef",
+        "android_client_info": {
+          "package_name": "inandout.pliend"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "765560159149-d87jfch817af14i3vjcsialv432i8up1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC94DzyfyrAhmgnrZQZ2K0wjRy-EmTz250"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -43,16 +43,16 @@ public class PwchangeActivity extends AppCompatActivity{
     private SQLiteHandler db;
     String name;
     String email;
-    // CONNECTION_TIMEOUT and READ_TIMEOUT are in milliseconds
-    public static final int CONNECTION_TIMEOUT = 10000;
-    public static final int READ_TIMEOUT = 15000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // ActionBar actionBar = getSupportActionBar();
-        // actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#FFA500")));
         setContentView(R.layout.activity_pwchange);
+
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#4CAF50")));
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setHomeAsUpIndicator(R.drawable.ic_clear_white_24dp);
 
         if(Build.VERSION.SDK_INT>=21){
             getWindow().setStatusBarColor(Color.parseColor("#43A047"));
@@ -207,5 +207,11 @@ public class PwchangeActivity extends AppCompatActivity{
     public void pwchange_clear(View v){
         Intent i=new Intent(PwchangeActivity.this, MainActivity.class);
         startActivity(i);
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish(); // close this activity as oppose to navigating up
+        return false;
     }
 }

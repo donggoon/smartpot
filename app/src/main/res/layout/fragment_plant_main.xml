@@ -4,166 +4,87 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary"
+    android:background="@color/windowBackground"
     android:gravity="center"
     android:id="@+id/main"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     android:orientation="vertical"
     android:weightSum="1"
     tools:context="inandout.pliend.activity.MainActivity">
-
+    <!--android:background="@drawable/background_icarus_bright"-->
+    <!--android:background="@color/windowBackground"-->
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:weightSum="5">
+
         <ImageView
-            android:paddingTop="100dp"
+            android:id="@+id/main_leaf"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            android:id="@+id/main_leaf"
-            android:background="@drawable/plant"
             android:layout_gravity="center_horizontal"
-            />
+            android:layout_marginTop="30dp"
+            android:background="@drawable/seed"
+            android:paddingTop="100dp" />
 
         <LinearLayout
+            android:layout_weight="2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"></LinearLayout>
+
+        <LinearLayout
+            android:layout_weight="3"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_gravity="center"
             android:orientation="horizontal"
-            android:weightSum="10">
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:weightSum="3">
 
             <LinearLayout
-                android:layout_weight="9"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"></LinearLayout>
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center">
+
+                <ImageButton
+                    android:id="@+id/plant_btn"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:background="@drawable/my_leaf_btn"
+                    android:onClick="search_onclick" />
+            </LinearLayout>
 
             <LinearLayout
-                android:layout_weight="2"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:weightSum="10">
-                <LinearLayout
-                    android:layout_weight="5"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:weightSum="4">
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center">
 
-                    <LinearLayout
-                        android:layout_weight="1"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
+                <ImageButton
+                    android:id="@+id/quest_btn"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:background="@drawable/quest_btn"
+                    android:onClick="gps_onclick" />
+            </LinearLayout>
 
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:gravity="center_vertical|center"
-                            android:text="이름"
-                            android:textSize="20dp"/>
-                    </LinearLayout>
 
-                    <LinearLayout
-                        android:layout_weight="1"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center">
 
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:gravity="center_vertical|center"
-                            android:text="생일"
-                            android:textSize="20dp"/>
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_weight="1"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:gravity="center_vertical|center"
-                            android:text="종류"
-                            android:textSize="20dp"/>
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_weight="1"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:gravity="center_vertical|center"
-                            android:text="레벨"
-                            android:textSize="20dp"/>
-                    </LinearLayout>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_weight="5"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:weightSum="4">
-                    <LinearLayout
-                        android:layout_weight="1"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:gravity="center_vertical|center"
-                            android:id="@+id/text_name"
-                            android:textSize="20dp"/>
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_weight="1"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:gravity="center_vertical|center"
-                            android:id="@+id/text_birth"
-                            android:textSize="20dp"/>
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_weight="1"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:gravity="center_vertical|center"
-                            android:id="@+id/text_type"
-                            android:textSize="20dp"/>
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_weight="1"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:gravity="center_vertical|center"
-                            android:id="@+id/text_level"
-                            android:textSize="20dp"/>
-                    </LinearLayout>
-                </LinearLayout>
+                <ImageButton
+                    android:id="@+id/camera_btn"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:background="@drawable/camera_btn"
+                    android:onClick="camera_onclick" />
             </LinearLayout>
         </LinearLayout>
-
     </LinearLayout>
-
 </FrameLayout>

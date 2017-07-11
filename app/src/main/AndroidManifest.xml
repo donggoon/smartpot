@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="inandout.pliend">
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.BLUETOOTH"/>
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
 
-    <uses-permission android:name="android.permission.INTERNET" />
     <application
         android:name="inandout.pliend.app.AppController"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/sprout"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@drawable/sprout"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
         <activity android:name=".activity.StartActivity">
@@ -38,22 +40,60 @@
             android:windowSoftInputMode="adjustPan" />
 
         <activity
+            android:theme="@style/AppBaseTheme"
+            android:label="식물 등록"
             android:name=".activity.AddPlantActivity"
-            android:label="@string/app_name"
             android:launchMode="singleTop"
             android:windowSoftInputMode="adjustPan" />
 
         <activity
+            android:theme="@style/AppBaseTheme"
+            android:label="기기 등록"
+            android:name=".activity.AddMachineActivity"
+            android:launchMode="singleTop"
+            android:windowSoftInputMode="adjustPan" />
+
+        <activity
+            android:theme="@style/AppBaseTheme"
+            android:label="마이페이지"
             android:name=".activity.MypageActivity"
-            android:label="@string/app_name"
             android:launchMode="singleTop"
             android:windowSoftInputMode="adjustPan" />
 
         <activity
+            android:theme="@style/AppBaseTheme"
+            android:label="비밀번호 변경"
             android:name=".activity.PwchangeActivity"
-            android:label="@string/app_name"
             android:launchMode="singleTop"
             android:windowSoftInputMode="adjustPan" />
+
+        <activity
+            android:theme="@style/AppBaseTheme"
+            android:label="퀘스트"
+            android:name=".activity.QuestActivity"
+            android:launchMode="singleTop"
+            android:windowSoftInputMode="adjustPan" />
+
+        <activity
+            android:theme="@style/AppBaseTheme"
+            android:label="푸시푸시"
+            android:name=".activity.PushNotificationActivity"
+            android:launchMode="singleTop"
+            android:windowSoftInputMode="adjustPan" />
+
+        <service
+            android:name=".firebase.FirebaseMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
+
+        <service
+            android:name=".firebase.FirebaseInstanceIDService">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>

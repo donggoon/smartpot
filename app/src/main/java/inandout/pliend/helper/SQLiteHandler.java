@@ -128,4 +128,17 @@ public class SQLiteHandler extends SQLiteOpenHelper {
 
         Log.d(TAG, "New plant updated into sqlite: " + id);
     }
+
+	public void noPlant(String email) {
+		SQLiteDatabase db = this.getWritableDatabase();
+
+		ContentValues values = new ContentValues();
+		values.put(KEY_PLANT, 0); // Plant
+
+		// Inserting Row
+		long id = db.update(TABLE_USER, values, "email=?", new String[]{email});
+		db.close(); // Closing database connection
+
+		Log.d(TAG, "New plant updated into sqlite: " + id);
+	}
 }

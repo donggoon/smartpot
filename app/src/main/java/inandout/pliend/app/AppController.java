@@ -19,13 +19,33 @@ public class AppController extends Application {
 	private static AppController mInstance;
 
 	private boolean isPlantRegister = false;
-	private String userEmail;
+	private boolean isBluetooth = false;
+	private String plantName;
+	private String plantBirth;
+	private String plantType;
+	private String plantLevel;
+	private String machineName;
 
 	public boolean getIsPlantRegister() { return isPlantRegister; }
 	public void setIsPlantRegister(boolean isPlantRegister) { this.isPlantRegister = isPlantRegister; }
 
-	public String getUserEmail() { return userEmail; }
-	public void setUserEmail(String userEmail) { this.userEmail = userEmail; }
+	public boolean getIsBluetooth() { return isBluetooth; }
+	public void setIsBluetooth(boolean isBluetooth) { this.isBluetooth = isBluetooth; }
+
+	public String getPlantName() { return plantName; }
+	public void setPlantName(String plantName) { this.plantName = plantName; }
+
+	public String getPlantBirth() { return plantBirth; }
+	public void setPlantBirth(String plantBirth) { this.plantBirth = plantBirth; }
+
+	public String getPlantType() { return plantType; }
+	public void setPlantType(String plantType) { this.plantType = plantType; }
+
+	public String getPlantLevel() { return plantLevel; }
+	public void setPlantLevel(String plantLevel) { this.plantLevel = plantLevel; }
+
+	public String getMachineName() { return machineName; }
+	public void setMachineName(String machineName) { this.machineName = machineName; }
 
 	@Override
 	public void onCreate() {

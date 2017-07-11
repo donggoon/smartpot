@@ -3,14 +3,15 @@ package inandout.pliend.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.TextView;
+import android.widget.ImageView;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -32,12 +33,15 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.List;
 
 import inandout.pliend.R;
 import inandout.pliend.activity.AddPlantActivity;
 import inandout.pliend.app.AppConfig;
+import inandout.pliend.app.AppController;
 import inandout.pliend.helper.SQLiteHandler;
-import inandout.pliend.store.DataStore;
+import inandout.pliend.store.AdapterPlant;
+import inandout.pliend.store.DataPlant;
 
 
 public class PlantMainFragment extends Fragment {
@@ -47,14 +51,17 @@ public class PlantMainFragment extends Fragment {
     private SQLiteHandler db;
     String plant;
     String email;
+    int level;
 
-    TextView textName;
-    TextView textBirth;
-    TextView textType;
-    TextView textLevel;
+    ImageView plantImg;
+
+    private RecyclerView mRVPlant;
+    private AdapterPlant mAdapter;
+
+    View view;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_plant_main, null);
+        view = inflater.inflate(R.layout.activity_recycler, null);
 
         // SqLite database handler
         db = new SQLiteHandler(getActivity());
@@ -62,8 +69,35 @@ public class PlantMainFragment extends Fragment {
         HashMap<String, String> user = db.getUserDetails();
         plant = user.get("plant");
 
+        // plantImg = (ImageView)view.findViewById(R.id.main_leaf);
+
+        ImageButton addPlantBtn = (ImageButton)view.findViewById(R.id.btn_add);
+        addPlantBtn.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                try {
+                    Intent intent = new Intent(getActivity(), AddPlantActivity.class);
+                    startActivity(intent);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        });
+
         if(Integer.parseInt(plant) == 0) {
-            view = inflater.inflate(R.layout.fragment_no_plant_main, null);
+            DataPlant noData = new DataPlant();
+            noData.plantName = "식물을 등록해주세요";
+            noData.plantBirth = " ";
+            noData.plantBirth = " ";
+            noData.plantLevel = " ";
+            List<DataPlant> data = new ArrayList<>();
+            data.add(noData);
+
+            mRVPlant = (RecyclerView) view.findViewById(R.id.list);
+            mAdapter = new AdapterPlant(getActivity(), data);
+            mRVPlant.setAdapter(mAdapter);
+            mRVPlant.setLayoutManager(new LinearLayoutManager(getActivity()));
+            /*view = inflater.inflate(R.layout.fragment_no_plant_main, null);
 
             ImageButton addPlantImageBtn = (ImageButton)view.findViewById(R.id.btn_add_plant_image);
             Button addPlantTextBtn = (Button)view.findViewById(R.id.btn_add_plant_text);
@@ -86,17 +120,17 @@ public class PlantMainFragment extends Fragment {
                     intent = new Intent(getActivity(), AddPlantActivity.class);
                     startActivity(intent);
                 }
-            });
+            });*/
         }
         else {
             // session manager
             // Fetching user details from sqlite
             email = user.get("email");
-            textName = (TextView) view.findViewById(R.id.text_name);
+            /*textName = (TextView) view.findViewById(R.id.text_name);
             textBirth = (TextView) view.findViewById(R.id.text_birth);
             textType = (TextView) view.findViewById(R.id.text_type);
             textLevel = (TextView) view.findViewById(R.id.text_level);
-
+*/
             new AsyncFetch(email, getActivity()).execute();
         }
         return view;
@@ -129,7 +163,6 @@ public class PlantMainFragment extends Fragment {
         @Override
         protected String doInBackground(String... params) {
             try {
-
                 // Enter URL address where your php file resides
                 url = new URL(AppConfig.URL_LOAD_PLANT);
 
@@ -204,6 +237,7 @@ public class PlantMainFragment extends Fragment {
 
             //this method will be running on UI thread
             pdLoading.dismiss();
+            List<DataPlant> data=new ArrayList<>();
 
             if(result.equals("no rows")) {
             } else{
@@ -212,16 +246,35 @@ public class PlantMainFragment extends Fragment {
                     JSONArray jArray = new JSONArray(result);
 
                     JSONObject json_data = jArray.getJSONObject(0);
-                    DataStore storeData = new DataStore();
-                    storeData.storeName = json_data.getString("name");
-                    storeData.storeBirth = json_data.getString("birth");
-                    storeData.storeType = json_data.getString("type");
-                    storeData.storeLevel = json_data.getString("level");
+                    DataPlant storeData = new DataPlant();
+                    storeData.plantName = json_data.getString("name");
+                    storeData.plantBirth = json_data.getString("birth");
+                    storeData.plantType = json_data.getString("type");
+                    storeData.plantLevel = json_data.getString("level");
 
-                    textName.setText(storeData.storeName);
-                    textBirth.setText(storeData.storeBirth);
-                    textType.setText(storeData.storeType);
-                    textLevel.setText(storeData.storeLevel);
+                    data.add(storeData);
+
+                    AppController.getInstance().setPlantName(storeData.plantName);
+                    AppController.getInstance().setPlantBirth(storeData.plantBirth);
+                    AppController.getInstance().setPlantType(storeData.plantType);
+                    AppController.getInstance().setPlantLevel(storeData.plantLevel);
+
+                    /*
+                    textName.setText("제 이름은 " + storeData.plantName + "입니다.");
+                    textBirth.setText("제 생일은 " + storeData.plantBirth + "입니다.");
+                    textType.setText("저는 " + storeData.plantType + "입니다.");
+                    String current = "새싹";
+                    if(Integer.parseInt(storeData.plantLevel) == 1) {
+                        plantImg.setImageResource(R.drawable.seed);
+                        current = "씨앗";
+                    }
+                    textLevel.setText("저는 지금 " + current + "입니다.");
+                    */
+                    // Setup and Handover data to recyclerview
+                    mRVPlant = (RecyclerView) view.findViewById(R.id.list);
+                    mAdapter = new AdapterPlant(getActivity(), data);
+                    mRVPlant.setAdapter(mAdapter);
+                    mRVPlant.setLayoutManager(new LinearLayoutManager(getActivity()));
 
                 } catch (JSONException e) {
                     // You to understand what actually error is and handle it appropriately

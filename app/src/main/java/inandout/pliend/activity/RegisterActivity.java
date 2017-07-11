@@ -94,17 +94,6 @@ public class RegisterActivity extends AppCompatActivity {
                 btnRegister.setEnabled(false);
 
                 registerUser(name, email, password);
-                /*
-                else {
-                    Toast.makeText(getApplicationContext(),
-                            "Please enter your details!", Toast.LENGTH_LONG)
-                            .show();
-                }
-                */
-                /*
-                if (!name.isEmpty() && !email.isEmpty() && !password.isEmpty()) {
-                    registerUser(name, email, password);
-                }*/
             }
         });
 

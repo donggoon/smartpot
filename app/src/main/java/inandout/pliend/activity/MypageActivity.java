@@ -14,15 +14,26 @@ import java.util.HashMap;
 
 import inandout.pliend.R;
 import inandout.pliend.helper.SQLiteHandler;
+import inandout.pliend.helper.SessionManager;
 
 public class MypageActivity extends AppCompatActivity{
     private SQLiteHandler db;
     TextView textName;
     TextView textEmail;
+    private SessionManager session;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mypage);
+
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#4CAF50")));
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setHomeAsUpIndicator(R.drawable.ic_clear_white_24dp);
+
+        // session manager
+        session = new SessionManager(getApplicationContext());
 
         if(Build.VERSION.SDK_INT>=21){
             getWindow().setStatusBarColor(Color.parseColor("#43A047"));
@@ -48,8 +59,10 @@ public class MypageActivity extends AppCompatActivity{
         Intent i=new Intent(MypageActivity.this, ChangePlantActivity.class);
         startActivity(i);
     }*/
-    public void logout_onclick(View v){
-        Intent i = new Intent(MypageActivity.this, MainActivity.class);
-        startActivity(i);
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish(); // close this activity as oppose to navigating up
+        return false;
     }
 }

@@ -17,6 +17,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.messaging.FirebaseMessaging;
+
 import java.util.HashMap;
 
 import inandout.pliend.R;
@@ -50,11 +53,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             getWindow().setStatusBarColor(Color.parseColor("#43A047"));
         }
 
+        //추가한 라인
+        FirebaseMessaging.getInstance().subscribeToTopic("news");
+        FirebaseInstanceId.getInstance().getToken();
+
         // SqLite database handler
         db = new SQLiteHandler(getApplicationContext());
 
         HashMap<String, String> user = db.getUserDetails();
         name = user.get("name");
+
+        FirebaseMessaging.getInstance().subscribeToTopic("news");
+        FirebaseInstanceId.getInstance().getToken();
 
         // session manager
         session = new SessionManager(getApplicationContext());
@@ -70,6 +80,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         //네비게이션 코드
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+
+        // Drawable actionbarDrawable = getResources().getDrawable(R.drawable.actionbar_burlesque);
+
+        // ActionBar actionBar = getSupportActionBar();
+        // actionBar.setBackgroundDrawable(actionbarDrawable);
+
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
@@ -83,14 +99,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         //탭 구현 코드
         // Initializing the TabLayout
         tabLayout = (TabLayout) findViewById(R.id.tabLayout);
-        tabLayout.addTab(tabLayout.newTab().setText("식물").setIcon(R.drawable.home_tab));
-        tabLayout.setBackgroundColor(Color.parseColor("#E8F5E9"));
-        tabLayout.setTabTextColors(getResources().getColor(R.color.white), getResources().getColor(R.color.black));
+        tabLayout.addTab(tabLayout.newTab().setText("식물").setIcon(R.drawable.plant_tab));
+        // tabLayout.setBackgroundResource(R.drawable.actionbar_burlesque);
+        tabLayout.setTabTextColors(getResources().getColor(R.color.tabNo), getResources().getColor(R.color.tabYes));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         tabLayout = (TabLayout) findViewById(R.id.tabLayout);
-        tabLayout.addTab(tabLayout.newTab().setText("기기").setIcon(R.drawable.reg_tab));
-        tabLayout.setBackgroundColor(Color.parseColor("#E8F5E9"));
+        tabLayout.addTab(tabLayout.newTab().setText("기기 ").setIcon(R.drawable.case_tab));
+        // tabLayout.setBackgroundResource(R.drawable.actionbar_burlesque);
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         // Initializing ViewPager
@@ -163,20 +179,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        /* if(id == R.id.nav_introduce){
-            Intent i = new Intent(this, IntroActivity.class);
+        if(id == R.id.nav_introduce){
+            Intent i = new Intent(this, PushNotificationActivity.class);
             startActivity(i);
-        }*/
+        }
 
-        if (id == R.id.nav_mypage) {
+        else if (id == R.id.nav_mypage) {
             Intent i = new Intent(this, MypageActivity.class);
             startActivity(i);
         }
-        /*
-        else if (id == R.id.nav_notice) {
-            Intent i = new Intent(this, NoticeActivity.class);
+
+        else if (id == R.id.nav_quest) {
+            Intent i = new Intent(this, QuestActivity.class);
             startActivity(i);
-        }*/
+        }
 
         else if(id == R.id.nav_logout){
             logoutUser();
