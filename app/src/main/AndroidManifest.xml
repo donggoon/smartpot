@@ -76,8 +76,8 @@
 
         <activity
             android:theme="@style/AppBaseTheme"
-            android:label="푸시푸시"
-            android:name=".activity.PushNotificationActivity"
+            android:label="성장도 분석"
+            android:name=".activity.AnalyzeActivity"
             android:launchMode="singleTop"
             android:windowSoftInputMode="adjustPan" />
 

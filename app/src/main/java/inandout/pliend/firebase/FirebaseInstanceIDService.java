@@ -1,5 +1,6 @@
 package inandout.pliend.firebase;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -8,6 +9,7 @@ import com.google.firebase.iid.FirebaseInstanceIdService;
 import java.io.IOException;
 
 import inandout.pliend.app.AppConfig;
+import inandout.pliend.app.AppController;
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -16,6 +18,7 @@ import okhttp3.RequestBody;
 public class FirebaseInstanceIDService extends FirebaseInstanceIdService {
     private static final String TAG = "MyFirebaseIIDService";
     private String email;
+    private Context context;
 
     // [START refresh_token]
     @Override
@@ -32,11 +35,12 @@ public class FirebaseInstanceIDService extends FirebaseInstanceIdService {
         // Add custom implementation, as needed.
        // HashMap<String, String> user = db.getUserDetails();
        // email = user.get("email");
+        email = AppController.getInstance().getUserEmail();
 
         OkHttpClient client = new OkHttpClient();
         RequestBody body = new FormBody.Builder()
                 .add("token", token)
-                .add("email", "dk3@naver.com")
+                .add("email", email)
                 .build();
 
         //request

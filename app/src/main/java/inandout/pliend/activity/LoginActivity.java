@@ -155,6 +155,7 @@ public class LoginActivity extends AppCompatActivity {
                         Log.d("plant", plant);
                         // Inserting row in users table
                         db.addUser(name, email, uid, created_at);
+                        AppController.getInstance().setUserEmail(email);
 
                         if(plant != "null") {
                             db.updatePlant(email);

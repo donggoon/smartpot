@@ -57,10 +57,20 @@
             android:inputType="textCapWords"
             android:textColor="@color/input_register"
             android:textColorHint="@color/input_register_hint" />
+
+        <Button
+            android:id="@+id/btn_add_plant_image"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dip"
+            android:background="@color/colorButton"
+            android:text="식물 이미지 넣기"
+            android:textColor="@color/black" />
+
         <!-- Login Button -->
 
         <Button
-            android:id="@+id/btn_add"
+            android:id="@+id/btn_add_plant"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dip"
@@ -79,5 +89,7 @@
             android:textColor="@color/colorInput"
             android:text="@string/btn_link_to_no_plant"
             android:textSize="15dp" />
+
+
     </LinearLayout>
 </LinearLayout>

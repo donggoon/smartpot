@@ -7,7 +7,6 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -16,24 +15,22 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.HashMap;
 
 import inandout.pliend.R;
-import inandout.pliend.helper.SQLiteHandler;
-import inandout.pliend.helper.SessionManager;
 
-public class MypageActivity extends AppCompatActivity{
-    private SQLiteHandler db;
-    TextView textName;
-    TextView textEmail;
-    private SessionManager session;
+/**
+ * Created by skehg on 2017-07-11.
+ */
+
+public class AnalyzeActivity extends AppCompatActivity{
+
 
     private static final int PICK_FROM_CAMERA = 0;
     private static final int PICK_FROM_ALBUM = 1;
@@ -46,61 +43,35 @@ public class MypageActivity extends AppCompatActivity{
 
     final Context context = this;
 
-    ImageView profile;
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_mypage);
-
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#4CAF50")));
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setHomeAsUpIndicator(R.drawable.ic_clear_white_24dp);
-
-        // session manager
-        session = new SessionManager(getApplicationContext());
-
-        if(Build.VERSION.SDK_INT>=21){
-            getWindow().setStatusBarColor(Color.parseColor("#43A047"));
-        }
-
-        db = new SQLiteHandler(getApplicationContext());
-        HashMap<String, String> user = db.getUserDetails();
-        String name = user.get("name");
-        String email = user.get("email");
-
-        textName = (TextView) findViewById(R.id.textName);
-        textEmail= (TextView) findViewById(R.id.textEmail);
-
-        textName.setText(name);
-        textEmail.setText(email);
-    }
-    public void pwchange_onclick(View v){
-        Intent i=new Intent(MypageActivity.this, PwchangeActivity.class);
-        startActivity(i);
-    }
-    /*
-    public void changeplant_onclick(View v){
-        Intent i=new Intent(MypageActivity.this, ChangePlantActivity.class);
-        startActivity(i);
-    }*/
+    Button previousBtn;
+    Button nowBtn;
+    Button analyzeBtn;
 
     @Override
     public boolean onSupportNavigateUp() {
         finish(); // close this activity as oppose to navigating up
         return false;
     }
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_analyze);
 
-    //사용자 사진 등록하기
-    //디비에 저장해야함
-    //지금 사용하는 이미지 고정인데
-    //그거 대신에 사진 선택하면 그 사진이
-    //사용자가 지정한 사진이 되도록
-    //코드수정해야됨
-    //식물 추가에서도 똑같이 해야됨
-    public void insert_picture_onclick(View v){
-          /* if(v.getId()==R.id.btn_signupfinish){
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#4CAF50")));
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setHomeAsUpIndicator(R.drawable.ic_clear_white_24dp);
+
+        previousBtn = (Button) findViewById(R.id.btn_previous);
+        nowBtn = (Button) findViewById(R.id.btn_now);
+        analyzeBtn = (Button) findViewById(R.id.btn_analyze);
+
+        //식물 이미지 넣기
+        //디비에 저장해야함
+        previousBtn.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                  /* if(v.getId()==R.id.btn_signupfinish){
             SharedPreferences prefs = getSharedPreferences("login",0);
 
             String user_name = prefs.getString("USER_NAME","");
@@ -110,25 +81,44 @@ public class MypageActivity extends AppCompatActivity{
             SignUpPhotoActivity.this.startActivity(mainIntent);
             SignUpPhotoActivity.this.finish();
         }*/
-        if(v.getId() == R.id.insert_picture){
-            DialogInterface.OnClickListener albumListener = new DialogInterface.OnClickListener(){
-                @Override
-                public void onClick(DialogInterface dialog, int which){
-                    doTakeAlbumAction();
+                if(v.getId() == R.id.btn_add_plant_image){
+                    DialogInterface.OnClickListener cameraListener = new DialogInterface.OnClickListener(){
+                        @Override
+                        public void onClick(DialogInterface dialog, int which){
+                            doTakePhotoAction();
+                        }
+                    };
+                    DialogInterface.OnClickListener albumListener = new DialogInterface.OnClickListener(){
+                        @Override
+                        public void onClick(DialogInterface dialog, int which){
+                            doTakeAlbumAction();
+                        }
+                    };
+                    DialogInterface.OnClickListener cancelListener = new DialogInterface.OnClickListener(){
+                        @Override
+                        public void onClick(DialogInterface dialog, int which){
+                            dialog.dismiss();
+                        }
+                    };
+                    new AlertDialog.Builder(context).setTitle("업로드할 이미지 선택")
+                            .setPositiveButton("사진촬영",cameraListener)
+                            .setNeutralButton("앨범선택", albumListener)
+                            .setNegativeButton("취소",cancelListener)
+                            .show();
                 }
-            };
-            DialogInterface.OnClickListener cancelListener = new DialogInterface.OnClickListener(){
-                @Override
-                public void onClick(DialogInterface dialog, int which){
-                    dialog.dismiss();
-                }
-            };
-            new AlertDialog.Builder(context).setTitle("업로드할 이미지 선택")
 
-                    .setNeutralButton("앨범선택", albumListener)
-                    .setNegativeButton("취소",cancelListener)
-                    .show();
-        }
+            }
+        });
+    }
+    public void doTakePhotoAction(){
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+        //임시로 사용할 파일의 경로를 생성
+        String url="tmp_"+ String.valueOf(System.currentTimeMillis()) + ".jpg";
+        mImageCaptureUri = Uri.fromFile(new File(Environment.getExternalStorageDirectory(), url));
+
+        intent.putExtra(MediaStore.EXTRA_OUTPUT,mImageCaptureUri);
+        startActivityForResult(intent, PICK_FROM_CAMERA);
     }
 
     //앨범에서 이미지 가져오기
@@ -178,7 +168,6 @@ public class MypageActivity extends AppCompatActivity{
                     absoultePath = filePath;
                     break;
                 }
-
                 File f = new File(mImageCaptureUri.getPath());
                 if(f.exists()){f.delete();}
             }
@@ -207,5 +196,7 @@ public class MypageActivity extends AppCompatActivity{
         } catch (IOException e) {
             e.printStackTrace();
         }
+
     }
+
 }

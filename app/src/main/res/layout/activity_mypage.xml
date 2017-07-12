@@ -18,7 +18,8 @@
         android:weightSum="1">
 
         <ImageView
-            android:id="@+id/leaf_bg"
+            android:id="@+id/insert_picture"
+            android:onClick="insert_picture_onclick"
             android:layout_width="94dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -93,5 +94,4 @@
                 android:onClick="changeplant_onclick" />
         </LinearLayout>
     </LinearLayout>
-
 </LinearLayout>

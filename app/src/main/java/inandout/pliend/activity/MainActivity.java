@@ -24,6 +24,7 @@ import java.util.HashMap;
 
 import inandout.pliend.R;
 import inandout.pliend.app.AppController;
+import inandout.pliend.firebase.FirebaseInstanceIDService;
 import inandout.pliend.helper.SQLiteHandler;
 import inandout.pliend.helper.SessionManager;
 import inandout.pliend.store.TabPagerAdapter;
@@ -52,10 +53,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if(Build.VERSION.SDK_INT>=21){
             getWindow().setStatusBarColor(Color.parseColor("#43A047"));
         }
-
-        //추가한 라인
-        FirebaseMessaging.getInstance().subscribeToTopic("news");
-        FirebaseInstanceId.getInstance().getToken();
 
         // SqLite database handler
         db = new SQLiteHandler(getApplicationContext());
@@ -179,13 +176,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if(id == R.id.nav_introduce){
+        /*if(id == R.id.nav_introduce){
             Intent i = new Intent(this, PushNotificationActivity.class);
+            startActivity(i);
+        }*/
+
+        if (id == R.id.nav_mypage) {
+            Intent i = new Intent(this, MypageActivity.class);
             startActivity(i);
         }
 
-        else if (id == R.id.nav_mypage) {
-            Intent i = new Intent(this, MypageActivity.class);
+        else if(id == R.id.nav_analyze){
+            Intent i = new Intent(this, AnalyzeActivity.class);
             startActivity(i);
         }
 

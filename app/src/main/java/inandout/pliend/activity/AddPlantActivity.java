@@ -1,15 +1,23 @@
 package inandout.pliend.activity;
 
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -21,6 +29,10 @@ import com.android.volley.toolbox.StringRequest;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,15 +45,30 @@ import inandout.pliend.helper.SessionManager;
 public class AddPlantActivity extends AppCompatActivity {
     private static final String TAG = AddPlantActivity.class.getSimpleName();
     AppController appController;
+
     Button addPlantBtn;
+    Button addPlantImage;
     Button linkToMainBtn;
+
     EditText editName;
     EditText editBirth;
     EditText editType;
+
     private ProgressDialog pDialog;
     private SessionManager session;
     private SQLiteHandler db;
     String email;
+
+    private static final int PICK_FROM_CAMERA = 0;
+    private static final int PICK_FROM_ALBUM = 1;
+    private static final int CROP_FROM_IMAGE = 2;
+
+    private Uri mImageCaptureUri;
+    private ImageView iv_UserPhoto;
+    private int id_view;
+    private String absoultePath;
+
+    final Context context = this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,8 +89,9 @@ public class AddPlantActivity extends AppCompatActivity {
 
         email = user.get("email");
 
-        addPlantBtn = (Button) findViewById(R.id.btn_add);
+        addPlantBtn = (Button) findViewById(R.id.btn_add_plant);
         linkToMainBtn = (Button) findViewById(R.id.btn_link_to_no_plant);
+        addPlantImage = (Button) findViewById(R.id.btn_add_plant_image);
 
         editName = (EditText) findViewById(R.id.plant_name);
         editBirth = (EditText) findViewById(R.id.plant_birth);
@@ -73,6 +101,50 @@ public class AddPlantActivity extends AppCompatActivity {
         // Progress dialog
         pDialog = new ProgressDialog(this);
         pDialog.setCancelable(false);
+
+        //식물 이미지 넣기
+        //디비에 저장해야함
+        addPlantImage.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                  /* if(v.getId()==R.id.btn_signupfinish){
+            SharedPreferences prefs = getSharedPreferences("login",0);
+
+            String user_name = prefs.getString("USER_NAME","");
+            db_manager.selectPhoto(user_name,mImageCaptureUri,absoultePath);
+
+            Intent mainIntent = new Intent(SingUpPhotoActivity.this, LoginActivity.class);
+            SignUpPhotoActivity.this.startActivity(mainIntent);
+            SignUpPhotoActivity.this.finish();
+        }*/
+                if(v.getId() == R.id.btn_add_plant_image){
+                    DialogInterface.OnClickListener cameraListener = new DialogInterface.OnClickListener(){
+                        @Override
+                        public void onClick(DialogInterface dialog, int which){
+                            doTakePhotoAction();
+                        }
+                    };
+                    DialogInterface.OnClickListener albumListener = new DialogInterface.OnClickListener(){
+                        @Override
+                        public void onClick(DialogInterface dialog, int which){
+                            doTakeAlbumAction();
+                        }
+                    };
+                    DialogInterface.OnClickListener cancelListener = new DialogInterface.OnClickListener(){
+                        @Override
+                        public void onClick(DialogInterface dialog, int which){
+                            dialog.dismiss();
+                        }
+                    };
+                    new AlertDialog.Builder(context).setTitle("업로드할 이미지 선택")
+                            .setPositiveButton("사진촬영",cameraListener)
+                            .setNeutralButton("앨범선택", albumListener)
+                            .setNegativeButton("취소",cancelListener)
+                            .show();
+                }
+
+            }
+        });
 
         addPlantBtn.setOnClickListener(new View.OnClickListener() {
 
@@ -181,6 +253,95 @@ public class AddPlantActivity extends AppCompatActivity {
         Toast.makeText(getBaseContext(), "등록에 실패하였습니다", Toast.LENGTH_LONG).show();
 
         addPlantBtn.setEnabled(true);
+    }
+
+    public void doTakePhotoAction(){
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+        //임시로 사용할 파일의 경로를 생성
+        String url="tmp_"+ String.valueOf(System.currentTimeMillis()) + ".jpg";
+        mImageCaptureUri = Uri.fromFile(new File(Environment.getExternalStorageDirectory(), url));
+
+        intent.putExtra(MediaStore.EXTRA_OUTPUT,mImageCaptureUri);
+        startActivityForResult(intent, PICK_FROM_CAMERA);
+    }
+
+    //앨범에서 이미지 가져오기
+    public void doTakeAlbumAction(){
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        intent.setType(MediaStore.Images.Media.CONTENT_TYPE);
+        startActivityForResult(intent, PICK_FROM_ALBUM);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data){
+        super.onActivityResult(requestCode,resultCode,data);
+        if(requestCode!=RESULT_OK)
+            return;
+
+        switch (requestCode){
+            case PICK_FROM_ALBUM: {
+                mImageCaptureUri = data.getData();
+                Log.d("SmartWheel",mImageCaptureUri.getPath().toString());
+            }
+
+            case PICK_FROM_CAMERA: {
+                Intent intent = new Intent("com.android.camera.action.CROP");
+                intent.setDataAndType(mImageCaptureUri,"image/*");
+
+                intent.putExtra("outputX",200); // x축 크기
+                intent.putExtra("outputY",200); // y축 크기
+                intent.putExtra("aspectX",1); // crop 박스의 x 축 비율
+                intent.putExtra("aspectY",1); // crop 박스의 y 축 비율
+                intent.putExtra("scale",true);
+                intent.putExtra("return-data",true);
+                startActivityForResult(intent,CROP_FROM_IMAGE);
+                break;
+            }
+
+            case CROP_FROM_IMAGE: {
+                if(resultCode != RESULT_OK){return;}
+                final Bundle extras = data.getExtras();
+
+                String filePath = Environment.getExternalStorageDirectory().getAbsolutePath()+"/SmartWheel"+ System.currentTimeMillis()+".jpg";
+
+                if(extras!= null){
+                    Bitmap photo = extras.getParcelable("data");
+                    iv_UserPhoto.setImageBitmap(photo);
+
+                    storeCropImage(photo,filePath);
+                    absoultePath = filePath;
+                    break;
+                }
+                File f = new File(mImageCaptureUri.getPath());
+                if(f.exists()){f.delete();}
+            }
+
+        }
+    }
+
+    private void storeCropImage(Bitmap bitmap, String filePath){
+        String dirPath = Environment.getExternalStorageDirectory().getAbsolutePath()+"/SmartWheel";
+        File directory_SmartWheel = new File(dirPath);
+
+        if(!directory_SmartWheel.exists()){directory_SmartWheel.mkdir();}
+        File copyFile = new File(filePath);
+        BufferedOutputStream out = null;
+
+        try{
+            copyFile.createNewFile();
+            out = new BufferedOutputStream(new FileOutputStream(copyFile));
+            bitmap.compress(Bitmap.CompressFormat.JPEG,100,out);
+
+            sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(copyFile)));
+
+            out.flush();
+            out.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     public boolean validate() {

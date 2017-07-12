@@ -25,6 +25,7 @@ public class AppController extends Application {
 	private String plantType;
 	private String plantLevel;
 	private String machineName;
+	private String userEmail;
 
 	public boolean getIsPlantRegister() { return isPlantRegister; }
 	public void setIsPlantRegister(boolean isPlantRegister) { this.isPlantRegister = isPlantRegister; }
@@ -46,6 +47,9 @@ public class AppController extends Application {
 
 	public String getMachineName() { return machineName; }
 	public void setMachineName(String machineName) { this.machineName = machineName; }
+
+	public String getUserEmail() { return userEmail; }
+	public void setUserEmail(String userEmail) { this.userEmail = userEmail; }
 
 	@Override
 	public void onCreate() {

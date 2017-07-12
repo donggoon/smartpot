@@ -2,7 +2,7 @@
 <android.support.v7.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/container_store"
+    android:id="@+id/quest"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     card_view:contentPadding="5dp"
@@ -18,22 +18,22 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:id="@+id/imageView4"
-            android:background="@drawable/img_cardview"
+            android:background="@drawable/flower"
             android:layout_gravity="center_vertical"
             android:layout_column="19"
             android:paddingRight="5dp"/>
         <TableLayout
-            android:layout_width="fill_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
             android:layout_gravity="center_vertical">
             <TableRow
                 android:weightSum="10">
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="220dp"
                     android:layout_height="wrap_content"
                     android:textSize="20dp"
-                    android:text="store name"
+                    android:text="목이 말라요!"
                     android:id="@+id/textName"
                     android:layout_weight="10"
                     android:layout_marginLeft="5dp"
@@ -41,45 +41,32 @@
                     android:layout_gravity="center_vertical"
                     android:layout_column="1" />
 
-                <ImageView
-                    android:layout_marginTop="5dp"
-                    android:layout_width="15dp"
-                    android:layout_height="15dp"
-                    android:id="@+id/imageView3"
-                    android:background="@drawable/right_arrow"
-                    android:layout_column="2" />
             </TableRow>
 
             <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
+
             </TableRow>
 
             <TableRow>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="store address"
+                    android:text="퀘스트 완료시 친밀도 5상승!"
                     android:id="@+id/textAddress"
                     android:layout_marginLeft="5dp"
                     android:layout_below="@id/textName"
                     android:textColor="#666"
-                    android:textSize="13dp"
-                    android:layout_column="1" />
-            </TableRow>
-
-            <TableRow>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="store subject"
-                    android:id="@+id/textSubject"
-                    android:layout_marginLeft="5dp"
-                    android:layout_below="@id/textAddress"
-                    android:textColor="#3a3a3a"
-                    android:textSize="13dp"
+                    android:textSize="16dp"
                     android:layout_column="1" />
             </TableRow>
         </TableLayout>
+        <TextView
+            android:layout_height="50dp"
+            android:layout_width="100dp"
+            android:text="현재시간"
+            android:textAlignment="center"
+            android:id="@+id/time"/>
     </LinearLayout>
 </android.support.v7.widget.CardView>
