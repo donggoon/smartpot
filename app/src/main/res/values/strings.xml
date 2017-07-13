@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">내 친구 식물이</string>
+    <string name="app_name">FloMate</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="gain_license">개인정보 이용약관</string>

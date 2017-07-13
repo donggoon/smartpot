@@ -18,7 +18,12 @@ public class AppConfig {
 	// Server data input url
 	public static String URL_LOAD_PLANT = "http://" + ip + "/yamyam_api/loadplant.php";
 
+	// Server data input url
+	public static String URL_LOAD_QUEST = "http://" + ip + "/yamyam_api/load_quest.php";
+
 	public static String URL_PW_CHANGE = "http://" + ip + "/yamyam_api/password-change.php";
 
 	public static String URL_REG_TOKEN = "http://" + ip + "/yamyam_api/register_token.php";
+
+	public static String URL_REG_QUEST = "http://" + ip + "/yamyam_api/register_quest.php";
 }

@@ -7,9 +7,11 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
 
 import java.io.IOException;
+import java.util.HashMap;
 
 import inandout.pliend.app.AppConfig;
 import inandout.pliend.app.AppController;
+import inandout.pliend.helper.SQLiteHandler;
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -18,7 +20,7 @@ import okhttp3.RequestBody;
 public class FirebaseInstanceIDService extends FirebaseInstanceIdService {
     private static final String TAG = "MyFirebaseIIDService";
     private String email;
-    private Context context;
+    SQLiteHandler db;
 
     // [START refresh_token]
     @Override
@@ -33,9 +35,11 @@ public class FirebaseInstanceIDService extends FirebaseInstanceIdService {
 
     private void sendRegistrationToServer(String token) {
         // Add custom implementation, as needed.
-       // HashMap<String, String> user = db.getUserDetails();
-       // email = user.get("email");
-        email = AppController.getInstance().getUserEmail();
+        db = new SQLiteHandler(getApplicationContext());
+        HashMap<String, String> user = db.getUserDetails();
+        email = user.get("email");
+
+        Log.d("email at instance", email);
 
         OkHttpClient client = new OkHttpClient();
         RequestBody body = new FormBody.Builder()

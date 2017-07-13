@@ -121,8 +121,8 @@ public class LoginActivity extends AppCompatActivity {
         // Tag used to cancel the request
         String tag_string_req = "req_login";
 
-        pDialog.setMessage("Loading ...");
-        showDialog();
+        // pDialog.setMessage("Loading ...");
+        // showDialog();
 
         StringRequest strReq = new StringRequest(Method.POST,
                 AppConfig.URL_LOGIN, new Response.Listener<String>() {
@@ -130,7 +130,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onResponse(String response) {
                 Log.d(TAG, "Login Response: " + response.toString());
-                hideDialog();
+                // hideDialog();
 
                 try {
                     JSONObject jObj = new JSONObject(response);
@@ -149,17 +149,16 @@ public class LoginActivity extends AppCompatActivity {
                         String name = user.getString("name");
                         String email = user.getString("email");
                         String created_at = user.getString("created_at");
-                        String plant = user.getString("plant");
+                        // String plant = user.getString("plant");
                         String machine = user.getString("machine");
 
-                        Log.d("plant", plant);
                         // Inserting row in users table
                         db.addUser(name, email, uid, created_at);
                         AppController.getInstance().setUserEmail(email);
 
-                        if(plant != "null") {
+                        /*if(plant != "null") {
                             db.updatePlant(email);
-                        }
+                        }*/
 
                         // Launch main activity
                         Intent intent = new Intent(LoginActivity.this,
@@ -177,7 +176,6 @@ public class LoginActivity extends AppCompatActivity {
                     e.printStackTrace();
                     Toast.makeText(getApplicationContext(), "Json error: " + e.getMessage(), Toast.LENGTH_LONG).show();
                 }
-
             }
         }, new Response.ErrorListener() {
 

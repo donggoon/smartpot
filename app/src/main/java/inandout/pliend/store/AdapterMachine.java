@@ -6,7 +6,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.util.Collections;
@@ -15,7 +14,6 @@ import java.util.List;
 
 import inandout.pliend.R;
 import inandout.pliend.activity.MainActivity;
-import inandout.pliend.app.AppController;
 import inandout.pliend.helper.SQLiteHandler;
 
 /**

@@ -2,6 +2,7 @@ package inandout.pliend.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -32,7 +33,7 @@ public class MachineMainFragment extends Fragment {
 
         // plantImg = (ImageView)view.findViewById(R.id.main_leaf);
 
-        ImageButton addMachineBtn = (ImageButton)view.findViewById(R.id.btn_add);
+        FloatingActionButton addMachineBtn = (FloatingActionButton) view.findViewById(R.id.btn_add);
         addMachineBtn.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
@@ -55,30 +56,6 @@ public class MachineMainFragment extends Fragment {
             mAdapter = new AdapterMachine(getActivity(), data);
             mRVPlant.setAdapter(mAdapter);
             mRVPlant.setLayoutManager(new LinearLayoutManager(getActivity()));
-            /*view = inflater.inflate(R.layout.fragment_no_plant_main, null);
-
-            ImageButton addPlantImageBtn = (ImageButton)view.findViewById(R.id.btn_add_plant_image);
-            Button addPlantTextBtn = (Button)view.findViewById(R.id.btn_add_plant_text);
-
-            addPlantImageBtn.setOnClickListener(new View.OnClickListener(){
-                @Override
-                public void onClick(View v){
-                    try {
-                        intent = new Intent(getActivity(), AddPlantActivity.class);
-                        startActivity(intent);
-                    }catch (Exception e){
-                        e.printStackTrace();
-                    }
-                }
-            });
-
-            addPlantTextBtn.setOnClickListener(new View.OnClickListener(){
-                @Override
-                public void onClick(View v){
-                    intent = new Intent(getActivity(), AddPlantActivity.class);
-                    startActivity(intent);
-                }
-            });*/
         }
         else {
             DataMachine noData = new DataMachine();
@@ -92,33 +69,5 @@ public class MachineMainFragment extends Fragment {
             mRVPlant.setLayoutManager(new LinearLayoutManager(getActivity()));
         }
         return view;
-        /*if(!AppController.getInstance().getIsBluetooth()) {
-            view = inflater.inflate(R.layout.fragment_no_machine_main, null);
-
-            ImageButton addPlantImageBtn = (ImageButton)view.findViewById(R.id.btn_add_machine_image);
-            Button addPlantTextBtn = (Button)view.findViewById(R.id.btn_add_machine_text);
-
-            addPlantImageBtn.setOnClickListener(new View.OnClickListener(){
-                @Override
-                public void onClick(View v){
-                    try {
-                        intent = new Intent(getActivity(), AddMachineActivity.class);
-                        startActivity(intent);
-                    }catch (Exception e){
-                        e.printStackTrace();
-                    }
-                }
-            });
-
-            addPlantTextBtn.setOnClickListener(new View.OnClickListener(){
-                @Override
-                public void onClick(View v){
-                    intent = new Intent(getActivity(), AddMachineActivity.class);
-                    startActivity(intent);
-                }
-            });
-        }
-        else {
-        }*/
     }
 }

@@ -1,19 +1,19 @@
 package inandout.pliend.fragment;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -67,11 +67,10 @@ public class PlantMainFragment extends Fragment {
         db = new SQLiteHandler(getActivity());
 
         HashMap<String, String> user = db.getUserDetails();
-        plant = user.get("plant");
-
         // plantImg = (ImageView)view.findViewById(R.id.main_leaf);
 
-        ImageButton addPlantBtn = (ImageButton)view.findViewById(R.id.btn_add);
+        FloatingActionButton addPlantBtn = (FloatingActionButton) view.findViewById(R.id.btn_add);
+        addPlantBtn.setBackgroundColor(Color.parseColor("#4CAF50"));
         addPlantBtn.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
@@ -84,61 +83,16 @@ public class PlantMainFragment extends Fragment {
             }
         });
 
-        if(Integer.parseInt(plant) == 0) {
-            DataPlant noData = new DataPlant();
-            noData.plantName = "식물을 등록해주세요";
-            noData.plantBirth = " ";
-            noData.plantBirth = " ";
-            noData.plantLevel = " ";
-            List<DataPlant> data = new ArrayList<>();
-            data.add(noData);
+        email = user.get("email");
 
-            mRVPlant = (RecyclerView) view.findViewById(R.id.list);
-            mAdapter = new AdapterPlant(getActivity(), data);
-            mRVPlant.setAdapter(mAdapter);
-            mRVPlant.setLayoutManager(new LinearLayoutManager(getActivity()));
-            /*view = inflater.inflate(R.layout.fragment_no_plant_main, null);
+        new AsyncFetch(email, getActivity()).execute();
 
-            ImageButton addPlantImageBtn = (ImageButton)view.findViewById(R.id.btn_add_plant_image);
-            Button addPlantTextBtn = (Button)view.findViewById(R.id.btn_add_plant_text);
-
-            addPlantImageBtn.setOnClickListener(new View.OnClickListener(){
-                @Override
-                public void onClick(View v){
-                    try {
-                        intent = new Intent(getActivity(), AddPlantActivity.class);
-                        startActivity(intent);
-                    }catch (Exception e){
-                        e.printStackTrace();
-                    }
-                }
-            });
-
-            addPlantTextBtn.setOnClickListener(new View.OnClickListener(){
-                @Override
-                public void onClick(View v){
-                    intent = new Intent(getActivity(), AddPlantActivity.class);
-                    startActivity(intent);
-                }
-            });*/
-        }
-        else {
-            // session manager
-            // Fetching user details from sqlite
-            email = user.get("email");
-            /*textName = (TextView) view.findViewById(R.id.text_name);
-            textBirth = (TextView) view.findViewById(R.id.text_birth);
-            textType = (TextView) view.findViewById(R.id.text_type);
-            textLevel = (TextView) view.findViewById(R.id.text_level);
-*/
-            new AsyncFetch(email, getActivity()).execute();
-        }
         return view;
     }
     // Create class AsyncFetch
     private class AsyncFetch extends AsyncTask<String, String, String> {
 
-        ProgressDialog pdLoading = new ProgressDialog(getActivity());
+        // ProgressDialog pdLoading = new ProgressDialog(getActivity());
         HttpURLConnection conn;
         URL url = null;
         String searchQuery;
@@ -152,12 +106,6 @@ public class PlantMainFragment extends Fragment {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-
-            //this method will be running on UI thread
-            pdLoading.setMessage("\tLoading...");
-            pdLoading.setCancelable(false);
-            pdLoading.show();
-
         }
 
         @Override
@@ -236,28 +184,41 @@ public class PlantMainFragment extends Fragment {
         protected void onPostExecute(String result) {
 
             //this method will be running on UI thread
-            pdLoading.dismiss();
+            // pdLoading.dismiss();
             List<DataPlant> data=new ArrayList<>();
 
             if(result.equals("no rows")) {
+                DataPlant noData = new DataPlant();
+                noData.plantName = "식물을 등록해주세요";
+                noData.plantBirth = " ";
+                noData.plantBirth = " ";
+                noData.plantLevel = " ";
+                data.add(noData);
+
+                mRVPlant = (RecyclerView) view.findViewById(R.id.list);
+                mAdapter = new AdapterPlant(getActivity(), data);
+                mRVPlant.setAdapter(mAdapter);
+                mRVPlant.setLayoutManager(new LinearLayoutManager(getActivity()));
             } else{
                 try {
-                    db.updatePlant(email);
+                    // db.updatePlant(email);
                     JSONArray jArray = new JSONArray(result);
 
-                    JSONObject json_data = jArray.getJSONObject(0);
-                    DataPlant storeData = new DataPlant();
-                    storeData.plantName = json_data.getString("name");
-                    storeData.plantBirth = json_data.getString("birth");
-                    storeData.plantType = json_data.getString("type");
-                    storeData.plantLevel = json_data.getString("level");
+                    for (int i = 0; i < jArray.length(); i++) {
 
-                    data.add(storeData);
+                        JSONObject json_data = jArray.getJSONObject(i);
+                        DataPlant storeData = new DataPlant();
+                        storeData.plantName = json_data.getString("name");
+                        storeData.plantBirth = json_data.getString("birth");
+                        storeData.plantType = json_data.getString("type");
+                        storeData.plantLevel = json_data.getString("level");
 
-                    AppController.getInstance().setPlantName(storeData.plantName);
-                    AppController.getInstance().setPlantBirth(storeData.plantBirth);
-                    AppController.getInstance().setPlantType(storeData.plantType);
-                    AppController.getInstance().setPlantLevel(storeData.plantLevel);
+                        data.add(storeData);
+
+                        AppController.getInstance().setPlantName(storeData.plantName);
+                        AppController.getInstance().setPlantBirth(storeData.plantBirth);
+                        AppController.getInstance().setPlantType(storeData.plantType);
+                        AppController.getInstance().setPlantLevel(storeData.plantLevel);
 
                     /*
                     textName.setText("제 이름은 " + storeData.plantName + "입니다.");
@@ -270,6 +231,8 @@ public class PlantMainFragment extends Fragment {
                     }
                     textLevel.setText("저는 지금 " + current + "입니다.");
                     */
+
+                    }
                     // Setup and Handover data to recyclerview
                     mRVPlant = (RecyclerView) view.findViewById(R.id.list);
                     mAdapter = new AdapterPlant(getActivity(), data);

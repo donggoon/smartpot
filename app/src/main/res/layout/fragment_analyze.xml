@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/container_analysis"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_margin="@dimen/card_margin"
+        android:elevation="3dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="406dp">
+
+            <ImageView
+                android:id="@+id/previous_image"
+                android:layout_width="150dp"
+                android:layout_height="200dp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginLeft="24dp"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="73dp" />
+
+            <ImageView
+                android:id="@+id/now_image"
+                android:layout_width="150dp"
+                android:layout_height="200dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignTop="@+id/previous_image"
+                android:layout_marginEnd="24dp"
+                android:layout_marginRight="24dp" />
+
+
+            <Button
+                android:id="@+id/btn_previous"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:background="@color/colorButton"
+                android:onClick="pre_onclick"
+                android:text="이전 사진 선택"
+                android:layout_alignBaseline="@+id/btn_now"
+                android:layout_alignBottom="@+id/btn_now"
+                android:layout_alignLeft="@+id/previous_image"
+                android:layout_alignStart="@+id/previous_image"
+                android:layout_alignRight="@+id/previous_image"
+                android:layout_alignEnd="@+id/previous_image" />
+
+            <Button
+                android:id="@+id/btn_now"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="52dp"
+                android:background="@color/colorButton"
+                android:onClick="now_onclick"
+                android:text="현재 사진 선택"
+                android:layout_below="@+id/now_image"
+                android:layout_alignLeft="@+id/now_image"
+                android:layout_alignStart="@+id/now_image"
+                android:layout_alignRight="@+id/now_image"
+                android:layout_alignEnd="@+id/now_image" />
+
+        </RelativeLayout>
+
+        <Button
+            android:id="@+id/btn_analyze"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center"
+            android:background="@color/colorButton"
+            android:onClick="btn_analysis_event"
+            android:text="성장도 분석"
+            android:textColor="@color/btn_login"
+            android:layout_marginBottom="50dp"/>
+    </android.support.v7.widget.CardView>
+</LinearLayout>

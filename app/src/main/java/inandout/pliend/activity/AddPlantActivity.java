@@ -190,7 +190,7 @@ public class AddPlantActivity extends AppCompatActivity {
                     boolean error = jObj.getBoolean("error");
                     if (!error) {
                         Toast.makeText(getApplicationContext(), "식물 등록에 성공했습니다!", Toast.LENGTH_LONG).show();
-                        db.updatePlant(email);
+                        // db.updatePlant(email);
                         Log.d("등록 성공", "1");
 
                         // Inserting row in users table

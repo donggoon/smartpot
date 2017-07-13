@@ -5,4 +5,5 @@ package inandout.pliend.activity;
  */
 
 public class DetailActivity {
+
 }
