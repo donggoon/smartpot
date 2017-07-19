@@ -121,7 +121,7 @@ public class PwchangeActivity extends AppCompatActivity{
                                 .getString("created_at");
 
                         // Inserting row in users table
-                        db.addUser(name, email, uid, created_at);
+                        // db.addUser(name, email, uid, created_at);
 
                         Toast.makeText(getApplicationContext(), "비밀번호 변경에 성공하였습니다!", Toast.LENGTH_LONG).show();
 

@@ -38,10 +38,13 @@ public class SQLiteHandler extends SQLiteOpenHelper {
 	// Creating Tables
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		String CREATE_LOGIN_TABLE = "CREATE TABLE " + TABLE_USER + "("
+		/*String CREATE_LOGIN_TABLE = "CREATE TABLE " + TABLE_USER + "("
 				+ KEY_ID + " INTEGER PRIMARY KEY," + KEY_NAME + " TEXT,"
 				+ KEY_EMAIL + " TEXT UNIQUE," + KEY_UID + " TEXT," // + KEY_PLANT + " INTEGER,"
-				+ KEY_CREATED_AT + " TEXT" + ")";
+				+ KEY_CREATED_AT + " TEXT" + ")";*/
+		String CREATE_LOGIN_TABLE = "CREATE TABLE " + TABLE_USER + "("
+				+ KEY_NAME + " TEXT,"
+				+ KEY_EMAIL + " TEXT UNIQUE," + KEY_UID + " TEXT," + ")";
 		db.execSQL(CREATE_LOGIN_TABLE);
 
 		Log.d(TAG, "Database tables created");
@@ -60,7 +63,7 @@ public class SQLiteHandler extends SQLiteOpenHelper {
 	/**
 	 * Storing user details in database
 	 * */
-	public void addUser(String name, String email, String uid, String created_at) {
+	public void addUser(String name, String email, String uid) {
 		SQLiteDatabase db = this.getWritableDatabase();
 
 		ContentValues values = new ContentValues();
@@ -68,7 +71,7 @@ public class SQLiteHandler extends SQLiteOpenHelper {
 		values.put(KEY_EMAIL, email); // Email
 		values.put(KEY_UID, uid); // Email
 		// values.put(KEY_PLANT, 0); // Plant
-		values.put(KEY_CREATED_AT, created_at); // Created At
+		// values.put(KEY_CREATED_AT, created_at); // Created At
 
 		// Inserting Row
 		long id = db.insert(TABLE_USER, null, values);
@@ -89,12 +92,12 @@ public class SQLiteHandler extends SQLiteOpenHelper {
 		// Move to first row
 		cursor.moveToFirst();
         if (cursor.getCount() > 0) {
-            user.put("id", cursor.getString(0));
+            // user.put("id", cursor.getString(0));
             user.put("name", cursor.getString(1));
             user.put("email", cursor.getString(2));
             user.put("uid", cursor.getString(3));
 			// user.put("plant", cursor.getString(4));
-            user.put("created_at", cursor.getString(4));
+            // user.put("created_at", cursor.getString(4));
         }
 		cursor.close();
 		db.close();

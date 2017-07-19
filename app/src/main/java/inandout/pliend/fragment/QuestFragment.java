@@ -13,6 +13,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -35,7 +38,6 @@ import java.util.List;
 import inandout.pliend.R;
 import inandout.pliend.app.AppConfig;
 import inandout.pliend.helper.SQLiteHandler;
-import inandout.pliend.store.AdapterPlant;
 import inandout.pliend.store.AdapterQuest;
 import inandout.pliend.store.DataQuest;
 
@@ -51,17 +53,24 @@ public class QuestFragment extends Fragment {
     private RecyclerView mRVQuest;
     private AdapterQuest mAdapter;
 
+    private FirebaseAuth mAuth;
+    private FirebaseUser mUser;
+
     private SQLiteHandler db;
     String email;
 
     View view;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.activity_recycler, null);
+        view = inflater.inflate(R.layout.activity_recycler_quest, null);
 
         db = new SQLiteHandler(getActivity());
         HashMap<String, String> user  = db.getUserDetails();
         email = user.get("email");
+        /*mAuth = FirebaseAuth.getInstance();
+        mUser = mAuth.getCurrentUser();
+        email = mUser.getEmail();
+*/
         new QuestFragment.AsyncFetch(email, getActivity()).execute();
 
         return view;
@@ -71,11 +80,11 @@ public class QuestFragment extends Fragment {
     private class AsyncFetch extends AsyncTask<String, String, String> {
         HttpURLConnection conn;
         URL url = null;
-        String searchQuery;
+        String email;
         private Context context;
 
-        public AsyncFetch(String searchQuery, Context context){
-            this.searchQuery = searchQuery;
+        public AsyncFetch(String param, Context context){
+            this.email = param;
             this.context = context;
         }
 
@@ -109,7 +118,7 @@ public class QuestFragment extends Fragment {
                 conn.setDoOutput(true);
 
                 // add parameter to our above url
-                Uri.Builder builder = new Uri.Builder().appendQueryParameter("searchQuery", searchQuery);
+                Uri.Builder builder = new Uri.Builder().appendQueryParameter("email", email);
                 String query = builder.build().getEncodedQuery();
 
                 OutputStream os = conn.getOutputStream();
@@ -159,7 +168,7 @@ public class QuestFragment extends Fragment {
             //this method will be running on UI thread
             List<DataQuest> data = new ArrayList<>();
 
-            if(result.equals("no rows")) {
+            if(result.equals("[]")) {
                 DataQuest noData = new DataQuest();
                 noData.questContent = "퀘스트가 없습니다";
                 noData.questDate = " ";

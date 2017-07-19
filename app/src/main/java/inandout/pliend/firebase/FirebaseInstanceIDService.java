@@ -3,6 +3,8 @@ package inandout.pliend.firebase;
 import android.content.Context;
 import android.util.Log;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
 
@@ -22,6 +24,9 @@ public class FirebaseInstanceIDService extends FirebaseInstanceIdService {
     private String email;
     SQLiteHandler db;
 
+    private FirebaseAuth mAuth;
+    private FirebaseUser mUser;
+
     // [START refresh_token]
     @Override
     public void onTokenRefresh() {
@@ -35,16 +40,12 @@ public class FirebaseInstanceIDService extends FirebaseInstanceIdService {
 
     private void sendRegistrationToServer(String token) {
         // Add custom implementation, as needed.
-        db = new SQLiteHandler(getApplicationContext());
-        HashMap<String, String> user = db.getUserDetails();
-        email = user.get("email");
-
-        Log.d("email at instance", email);
+        // db = new SQLiteHandler(getApplicationContext());
+        // HashMap<String, String> user = db.getUserDetails();
 
         OkHttpClient client = new OkHttpClient();
         RequestBody body = new FormBody.Builder()
                 .add("token", token)
-                .add("email", email)
                 .build();
 
         //request

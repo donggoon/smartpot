@@ -37,7 +37,6 @@ import inandout.pliend.R;
 import inandout.pliend.app.AppConfig;
 import inandout.pliend.helper.SQLiteHandler;
 import inandout.pliend.store.AdapterQuest;
-import inandout.pliend.store.DataPlant;
 import inandout.pliend.store.DataQuest;
 
 /**
@@ -57,7 +56,7 @@ public class QuestActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_recycler);
+        setContentView(R.layout.activity_recycler_plant);
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#4CAF50")));
@@ -122,7 +121,7 @@ public class QuestActivity extends AppCompatActivity {
                 conn.setDoOutput(true);
 
                 // add parameter to our above url
-                Uri.Builder builder = new Uri.Builder().appendQueryParameter("searchQuery", searchQuery);
+                Uri.Builder builder = new Uri.Builder().appendQueryParameter("email", searchQuery);
                 String query = builder.build().getEncodedQuery();
 
                 OutputStream os = conn.getOutputStream();

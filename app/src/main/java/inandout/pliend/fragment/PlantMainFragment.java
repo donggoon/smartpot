@@ -7,6 +7,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,9 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.widget.Toast;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -53,6 +57,9 @@ public class PlantMainFragment extends Fragment {
     String email;
     int level;
 
+    private FirebaseAuth mAuth;
+    private FirebaseUser mUser;
+
     ImageView plantImg;
 
     private RecyclerView mRVPlant;
@@ -61,7 +68,10 @@ public class PlantMainFragment extends Fragment {
     View view;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.activity_recycler, null);
+        view = inflater.inflate(R.layout.activity_recycler_plant, null);
+
+        mAuth = FirebaseAuth.getInstance();
+        mUser = mAuth.getCurrentUser();
 
         // SqLite database handler
         db = new SQLiteHandler(getActivity());
@@ -71,35 +81,35 @@ public class PlantMainFragment extends Fragment {
 
         FloatingActionButton addPlantBtn = (FloatingActionButton) view.findViewById(R.id.btn_add);
         addPlantBtn.setBackgroundColor(Color.parseColor("#4CAF50"));
-        addPlantBtn.setOnClickListener(new View.OnClickListener(){
+        addPlantBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v){
+            public void onClick(View v) {
                 try {
                     Intent intent = new Intent(getActivity(), AddPlantActivity.class);
                     startActivity(intent);
-                }catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
         });
 
         email = user.get("email");
+        // email = mUser.getEmail();
 
         new AsyncFetch(email, getActivity()).execute();
 
         return view;
     }
+
     // Create class AsyncFetch
     private class AsyncFetch extends AsyncTask<String, String, String> {
-
-        // ProgressDialog pdLoading = new ProgressDialog(getActivity());
         HttpURLConnection conn;
         URL url = null;
-        String searchQuery;
+        String email;
         private Context context;
 
-        public AsyncFetch(String searchQuery, Context context){
-            this.searchQuery=searchQuery;
+        public AsyncFetch(String param, Context context) {
+            this.email = param;
             this.context = context;
         }
 
@@ -131,7 +141,7 @@ public class PlantMainFragment extends Fragment {
                 conn.setDoOutput(true);
 
                 // add parameter to our above url
-                Uri.Builder builder = new Uri.Builder().appendQueryParameter("searchQuery", searchQuery);
+                Uri.Builder builder = new Uri.Builder().appendQueryParameter("email", email);
                 String query = builder.build().getEncodedQuery();
 
                 OutputStream os = conn.getOutputStream();
@@ -149,12 +159,10 @@ public class PlantMainFragment extends Fragment {
             }
 
             try {
-
                 int response_code = conn.getResponseCode();
 
                 // Check if successful connection made
                 if (response_code == HttpURLConnection.HTTP_OK) {
-
                     // Read data sent from server
                     InputStream input = conn.getInputStream();
                     BufferedReader reader = new BufferedReader(new InputStreamReader(input));
@@ -169,7 +177,7 @@ public class PlantMainFragment extends Fragment {
                     return (result.toString());
 
                 } else {
-                    return("Connection error");
+                    return ("Connection error");
                 }
 
             } catch (IOException e) {
@@ -182,12 +190,11 @@ public class PlantMainFragment extends Fragment {
 
         @Override
         protected void onPostExecute(String result) {
-
             //this method will be running on UI thread
             // pdLoading.dismiss();
-            List<DataPlant> data=new ArrayList<>();
+            List<DataPlant> data = new ArrayList<>();
 
-            if(result.equals("no rows")) {
+            if (result.equals("[]")) {
                 DataPlant noData = new DataPlant();
                 noData.plantName = "식물을 등록해주세요";
                 noData.plantBirth = " ";
@@ -199,13 +206,12 @@ public class PlantMainFragment extends Fragment {
                 mAdapter = new AdapterPlant(getActivity(), data);
                 mRVPlant.setAdapter(mAdapter);
                 mRVPlant.setLayoutManager(new LinearLayoutManager(getActivity()));
-            } else{
+
+            } else {
                 try {
-                    // db.updatePlant(email);
                     JSONArray jArray = new JSONArray(result);
 
                     for (int i = 0; i < jArray.length(); i++) {
-
                         JSONObject json_data = jArray.getJSONObject(i);
                         DataPlant storeData = new DataPlant();
                         storeData.plantName = json_data.getString("name");
@@ -213,6 +219,9 @@ public class PlantMainFragment extends Fragment {
                         storeData.plantType = json_data.getString("type");
                         storeData.plantLevel = json_data.getString("level");
 
+                        if (Integer.parseInt(storeData.plantLevel) == 1) {
+                            storeData.plantLevel = "씨앗";
+                        }
                         data.add(storeData);
 
                         AppController.getInstance().setPlantName(storeData.plantName);

@@ -1,8 +1,11 @@
 package inandout.pliend.activity;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -21,7 +24,19 @@ import com.android.volley.toolbox.StringRequest;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import inandout.pliend.R;
@@ -29,19 +44,27 @@ import inandout.pliend.app.AppConfig;
 import inandout.pliend.helper.SQLiteHandler;
 import inandout.pliend.helper.SessionManager;
 import inandout.pliend.app.AppController;
+import inandout.pliend.store.DataPlant;
 
 /**
  * Created by DK on 2016-10-16.
  */
 public class RegisterActivity extends AppCompatActivity {
+    public static final int CONNECTION_TIMEOUT = 10000;
+    public static final int READ_TIMEOUT = 15000;
+
     private static final String TAG = RegisterActivity.class.getSimpleName();
+
     private Button btnRegister;
     private Button btnLinkToLogin;
+
     private EditText inputFullName;
     private EditText inputEmail;
     private EditText inputPassword;
     private EditText inputPasswordCheck;
+
     private ProgressDialog pDialog;
+
     private SessionManager session;
     private SQLiteHandler db;
 
@@ -93,7 +116,8 @@ public class RegisterActivity extends AppCompatActivity {
 
                 btnRegister.setEnabled(false);
 
-                registerUser(name, email, password);
+                new AsyncFetch(email, name, password, getApplicationContext()).execute();
+                // registerUser(name, email, password);
             }
         });
 
@@ -102,12 +126,128 @@ public class RegisterActivity extends AppCompatActivity {
 
             public void onClick(View view) {
                 Intent i = new Intent(getApplicationContext(),
-                        LoginActivity.class);
+                        SignInActivity.class);
                 startActivity(i);
                 finish();
             }
         });
 
+    }
+
+    // Create class AsyncFetch
+    private class AsyncFetch extends AsyncTask<String, String, String> {
+        HttpURLConnection conn;
+        URL url = null;
+        String email;
+        String name;
+        String password;
+        private Context context;
+
+        public AsyncFetch(String email, String name, String password, Context context) {
+            this.email = email;
+            this.name = name;
+            this.password = password;
+            this.context = context;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            try {
+                // Enter URL address where your php file resides
+                url = new URL(AppConfig.URL_REGISTER);
+
+            } catch (MalformedURLException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+                return e.toString();
+            }
+            try {
+                // Setup HttpURLConnection class to send and receive data from php and mysql
+                conn = (HttpURLConnection) url.openConnection();
+                conn.setReadTimeout(READ_TIMEOUT);
+                conn.setConnectTimeout(CONNECTION_TIMEOUT);
+                conn.setRequestMethod("POST");
+
+                // setDoInput and setDoOutput to true as we send and recieve data
+                conn.setDoInput(true);
+                conn.setDoOutput(true);
+
+                // add parameter to our above url
+                Uri.Builder builder = new Uri.Builder().appendQueryParameter("email", email)
+                        .appendQueryParameter("name", name)
+                        .appendQueryParameter("password", password);
+                String query = builder.build().getEncodedQuery();
+
+                OutputStream os = conn.getOutputStream();
+                BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
+                writer.write(query);
+                writer.flush();
+                writer.close();
+                os.close();
+                conn.connect();
+
+            } catch (IOException e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+                return e1.toString();
+            }
+
+            try {
+                int response_code = conn.getResponseCode();
+
+                // Check if successful connection made
+                if (response_code == HttpURLConnection.HTTP_OK) {
+                    // Read data sent from server
+                    InputStream input = conn.getInputStream();
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(input));
+                    StringBuilder result = new StringBuilder();
+                    String line;
+
+                    while ((line = reader.readLine()) != null) {
+                        result.append(line);
+                    }
+
+                    // Pass data to onPostExecute method
+                    return (result.toString());
+
+                } else {
+                    return ("Connection error");
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                return e.toString();
+            } finally {
+                conn.disconnect();
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+
+            //this method will be running on UI thread
+            // pdLoading.dismiss();
+            List<DataPlant> data = new ArrayList<>();
+
+            if (result.equals("success")) {
+                Toast.makeText(getApplicationContext(), "회원가입에 성공했습니다!", Toast.LENGTH_LONG).show();
+                // db.updatePlant(email);
+                Log.d("가입 성공", "1");
+                // Launch login activity
+                Intent intent = new Intent(RegisterActivity.this, SignInActivity.class);
+                startActivity(intent);
+                finish();
+            } else {
+                Toast.makeText(getApplicationContext(), "회원가입에 실패했습니다!", Toast.LENGTH_LONG).show();
+                // db.updatePlant(email);
+                Log.d("가입 실패", "1");
+            }
+        }
     }
 
     /**
@@ -144,14 +284,14 @@ public class RegisterActivity extends AppCompatActivity {
                                 .getString("created_at");
 
                         // Inserting row in users table
-                        db.addUser(name, email, uid, created_at);
+                        db.addUser(name, email, uid);
 
-                        Toast.makeText(getApplicationContext(), "회원가입에 성공했습니다. 로그인 하세요!", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), "회원가입에 성공했습니다!", Toast.LENGTH_LONG).show();
 
                         // Launch login activity
                         Intent intent = new Intent(
                                 RegisterActivity.this,
-                                LoginActivity.class);
+                                SignInActivity.class);
                         startActivity(intent);
                         finish();
                     } else {

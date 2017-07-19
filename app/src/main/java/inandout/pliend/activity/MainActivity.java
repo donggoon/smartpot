@@ -1,6 +1,7 @@
 package inandout.pliend.activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -21,16 +22,24 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
 
+import java.io.IOException;
 import java.util.HashMap;
 
 import inandout.pliend.R;
+import inandout.pliend.app.AppConfig;
 import inandout.pliend.app.AppController;
 import inandout.pliend.helper.SQLiteHandler;
 import inandout.pliend.helper.SessionManager;
 import inandout.pliend.store.TabPagerAdapter;
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
 
 /**
  * Created by DK on 2016-10-17.
@@ -41,6 +50,10 @@ public class MainActivity extends AppCompatActivity {
     private ViewPager viewPager;
     private TextView userName;
     private String name;
+    private String email;
+
+    private FirebaseAuth mAuth;
+    private FirebaseUser mUser;
 
     private SQLiteHandler db;
     private SessionManager session;
@@ -52,6 +65,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nav_drawer);
 
+        mAuth = FirebaseAuth.getInstance();
+        mUser = mAuth.getCurrentUser();
+
         btnMypage = (Button) findViewById(R.id.btn_mypage);
 
         if(Build.VERSION.SDK_INT>=21){
@@ -61,20 +77,29 @@ public class MainActivity extends AppCompatActivity {
         // SqLite database handler
         db = new SQLiteHandler(getApplicationContext());
 
-        HashMap<String, String> user = db.getUserDetails();
-        name = user.get("name");
-
-        FirebaseMessaging.getInstance().subscribeToTopic("news");
-        FirebaseInstanceId.getInstance().getToken();
-
         // session manager
         session = new SessionManager(getApplicationContext());
 
-        if (!session.isLoggedIn()) {
+        FirebaseMessaging.getInstance().subscribeToTopic("news");
+        final String token = FirebaseInstanceId.getInstance().getToken();
+
+        if(session.isLoggedIn()) {
+            HashMap<String, String> user = db.getUserDetails();
+            name = user.get("name");
+            email = user.get("email");
+
+            new Thread() {
+                public void run() {
+                    Log.d("thread check", token);
+                    regEmailToPushServer(email, token);
+                    // savePreferences("complete");
+                }
+            }.start();
+
+            btnMypage.setText(name.substring(1));
+        } else {
             logoutUser();
         }
-
-        btnMypage.setText(name);
 
         btnMypage.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
@@ -85,17 +110,6 @@ public class MainActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        /*//네비게이션 코드
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);*/
 
         //탭 구현 코드
         // Initializing the TabLayout
@@ -144,6 +158,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
 
     @Override
     public void onBackPressed() {
@@ -172,61 +190,50 @@ public class MainActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        /*if (id == R.id.btn_mypage) {
-            Intent intent = new Intent(this, MypageActivity.class);
-            startActivity(intent);
-        }*/
-
         return super.onOptionsItemSelected(item);
     }
 
-    /*@SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        *//*if(id == R.id.nav_introduce){
-            Intent i = new Intent(this, PushNotificationActivity.class);
-            startActivity(i);
-        }*//*
-
-        if (id == R.id.nav_mypage) {
-            Intent i = new Intent(this, MypageActivity.class);
-            startActivity(i);
-        }
-
-        else if(id == R.id.nav_analyze){
-            Intent i = new Intent(this, AnalyzeActivity.class);
-            startActivity(i);
-        }
-
-        else if (id == R.id.nav_quest) {
-            Intent i = new Intent(this, QuestActivity.class);
-            startActivity(i);
-        }
-
-        else if(id == R.id.nav_logout){
-            logoutUser();
-            Intent i = new Intent(this, LoginActivity.class);
-            startActivity(i);
-        }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
-    }*/
-
     private void logoutUser() {
         session.setLogin(false);
-
+        mAuth.signOut();
         db.deleteUsers();
 
-        // Launching the login activity
-
-        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+        Intent intent = new Intent(MainActivity.this, SignInActivity.class);
         startActivity(intent);
         finish();
+    }
+
+    /*private String getPreferences() {
+        SharedPreferences pref = getSharedPreferences("pref", MODE_PRIVATE);
+        return pref.getString("token", "");
+    }
+
+    // 값 저장하기
+    private void savePreferences(String str) {
+        SharedPreferences pref = getSharedPreferences("pref", MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putString("token", str);
+        editor.commit();
+    }*/
+
+    private void regEmailToPushServer(String email, String token) {
+        // Add custom implementation, as needed.
+        OkHttpClient client = new OkHttpClient();
+        RequestBody body = new FormBody.Builder()
+                .add("email", email)
+                .add("token", token)
+                .build();
+
+        //request
+        Request request = new Request.Builder()
+                .url(AppConfig.URL_REG_EMAIL)
+                .post(body)
+                .build();
+
+        try {
+            client.newCall(request).execute();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

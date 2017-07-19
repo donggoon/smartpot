@@ -19,6 +19,9 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -40,6 +43,10 @@ public class MypageActivity extends AppCompatActivity{
     private static final int CROP_FROM_IMAGE = 2;
 
     private Uri mImageCaptureUri;
+
+    private FirebaseAuth mAuth;
+    private FirebaseUser mUser;
+
     private ImageView iv_UserPhoto;
     private int id_view;
     private String absoultePath;
@@ -58,17 +65,22 @@ public class MypageActivity extends AppCompatActivity{
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeAsUpIndicator(R.drawable.ic_clear_white_24dp);
 
-        // session manager
         session = new SessionManager(getApplicationContext());
 
         if(Build.VERSION.SDK_INT>=21){
             getWindow().setStatusBarColor(Color.parseColor("#43A047"));
         }
 
+        /*mAuth = FirebaseAuth.getInstance();
+        mUser = mAuth.getCurrentUser();*/
+
         db = new SQLiteHandler(getApplicationContext());
         HashMap<String, String> user = db.getUserDetails();
         String name = user.get("name");
         String email = user.get("email");
+
+        /*String name = mUser.getDisplayName();
+        String email = mUser.getEmail();*/
 
         textName = (TextView) findViewById(R.id.textName);
         textEmail= (TextView) findViewById(R.id.textEmail);
@@ -76,9 +88,14 @@ public class MypageActivity extends AppCompatActivity{
         textName.setText(name);
         textEmail.setText(email);
     }
+
     public void pwchange_onclick(View v){
-        Intent i=new Intent(MypageActivity.this, PwchangeActivity.class);
+        Intent i = new Intent(MypageActivity.this, PwchangeActivity.class);
         startActivity(i);
+    }
+
+    public void logout_onclick(View v){
+        logoutUser();
     }
     /*
     public void changeplant_onclick(View v){
@@ -207,5 +224,16 @@ public class MypageActivity extends AppCompatActivity{
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void logoutUser() {
+        // mAuth.signOut();
+        session.setLogin(false);
+
+        // Launching the login activity
+
+        Intent intent = new Intent(MypageActivity.this, MainActivity.class);
+        startActivity(intent);
+        finish();
     }
 }

@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -25,15 +26,28 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import inandout.pliend.R;
@@ -41,8 +55,12 @@ import inandout.pliend.app.AppConfig;
 import inandout.pliend.app.AppController;
 import inandout.pliend.helper.SQLiteHandler;
 import inandout.pliend.helper.SessionManager;
+import inandout.pliend.store.DataPlant;
 
 public class AddPlantActivity extends AppCompatActivity {
+    public static final int CONNECTION_TIMEOUT = 10000;
+    public static final int READ_TIMEOUT = 15000;
+
     private static final String TAG = AddPlantActivity.class.getSimpleName();
     AppController appController;
 
@@ -68,6 +86,9 @@ public class AddPlantActivity extends AppCompatActivity {
     private int id_view;
     private String absoultePath;
 
+    private FirebaseAuth mAuth;
+    private FirebaseUser mUser;
+
     final Context context = this;
 
     @Override
@@ -81,13 +102,18 @@ public class AddPlantActivity extends AppCompatActivity {
             getWindow().setStatusBarColor(Color.parseColor("#43A047"));
         }
         // SqLite database handler
-        db = new SQLiteHandler(getApplicationContext());
+        /*db = new SQLiteHandler(getApplicationContext());
 
         // session manager
         // Fetching user details from sqlite
         HashMap<String, String> user = db.getUserDetails();
 
-        email = user.get("email");
+        email = user.get("email");*/
+
+        mAuth = FirebaseAuth.getInstance();
+        mUser = mAuth.getCurrentUser();
+
+        email = mUser.getEmail();
 
         addPlantBtn = (Button) findViewById(R.id.btn_add_plant);
         linkToMainBtn = (Button) findViewById(R.id.btn_link_to_no_plant);
@@ -160,7 +186,8 @@ public class AddPlantActivity extends AppCompatActivity {
 
                 addPlantBtn.setEnabled(false);
 
-                addPlant(email, name, birth, type);
+                new AsyncFetch(email, name, birth, type, getApplicationContext()).execute();
+                // addPlant(email, name, password, type);
 
                 Intent i = new Intent(getApplicationContext(),
                         StartActivity.class);
@@ -168,6 +195,124 @@ public class AddPlantActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
+    // Create class AsyncFetch
+    private class AsyncFetch extends AsyncTask<String, String, String> {
+        HttpURLConnection conn;
+        URL url = null;
+        String email;
+        String name;
+        String birth;
+        String type;
+        private Context context;
+
+        public AsyncFetch(String email, String name, String birth, String type, Context context) {
+            this.email = email;
+            this.name = name;
+            this.birth = birth;
+            this.type = type;
+            this.context = context;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            try {
+                // Enter URL address where your php file resides
+                url = new URL(AppConfig.URL_REG_PLANT);
+
+            } catch (MalformedURLException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+                return e.toString();
+            }
+            try {
+                // Setup HttpURLConnection class to send and receive data from php and mysql
+                conn = (HttpURLConnection) url.openConnection();
+                conn.setReadTimeout(READ_TIMEOUT);
+                conn.setConnectTimeout(CONNECTION_TIMEOUT);
+                conn.setRequestMethod("POST");
+
+                // setDoInput and setDoOutput to true as we send and recieve data
+                conn.setDoInput(true);
+                conn.setDoOutput(true);
+
+                // add parameter to our above url
+                Uri.Builder builder = new Uri.Builder().appendQueryParameter("email", email)
+                        .appendQueryParameter("name", name)
+                        .appendQueryParameter("password", birth)
+                        .appendQueryParameter("type", type);
+                String query = builder.build().getEncodedQuery();
+
+                OutputStream os = conn.getOutputStream();
+                BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
+                writer.write(query);
+                writer.flush();
+                writer.close();
+                os.close();
+                conn.connect();
+
+            } catch (IOException e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+                return e1.toString();
+            }
+
+            try {
+                int response_code = conn.getResponseCode();
+
+                // Check if successful connection made
+                if (response_code == HttpURLConnection.HTTP_OK) {
+                    // Read data sent from server
+                    InputStream input = conn.getInputStream();
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(input));
+                    StringBuilder result = new StringBuilder();
+                    String line;
+
+                    while ((line = reader.readLine()) != null) {
+                        result.append(line);
+                    }
+
+                    // Pass data to onPostExecute method
+                    return (result.toString());
+
+                } else {
+                    return ("Connection error");
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                return e.toString();
+            } finally {
+                conn.disconnect();
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+
+            //this method will be running on UI thread
+            // pdLoading.dismiss();
+            List<DataPlant> data = new ArrayList<>();
+
+            if (result.equals("success")) {
+                Toast.makeText(getApplicationContext(), "식물 등록에 성공했습니다!", Toast.LENGTH_LONG).show();
+                // db.updatePlant(email);
+                Log.d("등록 성공", "1");
+                // Launch login activity
+                Intent intent = new Intent(AddPlantActivity.this, MainActivity.class);
+                startActivity(intent);
+                finish();
+            } else {
+                Toast.makeText(getApplicationContext(), "식물 등록에 실패했습니다!", Toast.LENGTH_LONG).show();
+                // db.updatePlant(email);
+                Log.d("등록 실패", "1");
+            }
+        }
     }
 
     private void addPlant(final String email, final String name, final String birth, final String type) {
@@ -228,7 +373,7 @@ public class AddPlantActivity extends AppCompatActivity {
                 Map<String, String> params = new HashMap<String, String>();
                 params.put("email", email);
                 params.put("name", name);
-                params.put("birth", birth);
+                params.put("password", birth);
                 params.put("type", type);
 
                 return params;

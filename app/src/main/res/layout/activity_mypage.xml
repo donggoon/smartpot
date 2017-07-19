@@ -93,5 +93,21 @@
                 android:text="식물정보 변경"
                 android:onClick="changeplant_onclick" />
         </LinearLayout>
+
+        <LinearLayout
+            android:background="#FFFFFF"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal"
+            android:layout_weight="0.05"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorButton"
+                android:textColor="@color/btn_login"
+                android:text="로그아웃"
+                android:onClick="logout_onclick" />
+        </LinearLayout>
     </LinearLayout>
 </LinearLayout>

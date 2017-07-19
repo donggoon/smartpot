@@ -81,6 +81,11 @@
             android:textColor="@color/colorPrimaryDark"
             android:text="@string/btn_link_to_register"
             android:textSize="15dp" />
+
+        <com.google.android.gms.common.SignInButton
+            android:id="@+id/sign_in_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
     </LinearLayout>
 
 </LinearLayout>

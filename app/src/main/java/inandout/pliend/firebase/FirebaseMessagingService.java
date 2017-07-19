@@ -46,7 +46,7 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
         Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
                 .setSmallIcon(R.drawable.sprout)
-                .setContentTitle("내 친구 식물이")
+                .setContentTitle("FloMate")
                 .setContentText(messageBody)
                 .setAutoCancel(true)
                 .setSound(defaultSoundUri)
@@ -71,7 +71,6 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
         int hour = c.get(Calendar.HOUR);
         int minute = c.get(Calendar.MINUTE);
         int am_pm = c.get(Calendar.AM_PM);
-        int second = c.get(Calendar.SECOND);
 
         String strYear = String.valueOf(year);
         String strMonth = String.valueOf(month);

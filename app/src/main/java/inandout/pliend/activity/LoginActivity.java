@@ -153,7 +153,7 @@ public class LoginActivity extends AppCompatActivity {
                         String machine = user.getString("machine");
 
                         // Inserting row in users table
-                        db.addUser(name, email, uid, created_at);
+                        // db.addUser(name, email, uid, created_at);
                         AppController.getInstance().setUserEmail(email);
 
                         /*if(plant != "null") {
@@ -176,6 +176,7 @@ public class LoginActivity extends AppCompatActivity {
                     e.printStackTrace();
                     Toast.makeText(getApplicationContext(), "Json error: " + e.getMessage(), Toast.LENGTH_LONG).show();
                 }
+
             }
         }, new Response.ErrorListener() {
 

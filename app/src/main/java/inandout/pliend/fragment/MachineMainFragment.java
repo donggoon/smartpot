@@ -9,16 +9,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import inandout.pliend.R;
 import inandout.pliend.activity.AddMachineActivity;
 import inandout.pliend.app.AppController;
-import inandout.pliend.helper.SQLiteHandler;
 import inandout.pliend.store.AdapterMachine;
 import inandout.pliend.store.DataMachine;
 
@@ -29,7 +26,7 @@ public class MachineMainFragment extends Fragment {
     private AdapterMachine mAdapter;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.activity_recycler, null);
+        View view = inflater.inflate(R.layout.activity_recycler_plant, null);
 
         // plantImg = (ImageView)view.findViewById(R.id.main_leaf);
 

@@ -48,14 +48,14 @@ public class AdapterPlant extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         HashMap<String, String> user = db.getUserDetails();
         id = user.get("id");
 
-        inflater= LayoutInflater.from(context);
-        this.data=data;
+        inflater = LayoutInflater.from(context);
+        this.data = data;
     }
 
     // Inflate the layout when ViewHolder created
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = inflater.inflate(R.layout.container_plant, parent,false);
+        View view = inflater.inflate(R.layout.card_item_one, parent,false);
         MyHolder holder = new MyHolder(view);
 
         return holder;
@@ -70,6 +70,7 @@ public class AdapterPlant extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         myHolder.textName.setText(current.plantName);
         myHolder.textBirth.setText(current.plantBirth);
         myHolder.textType.setText(current.plantType);
+        myHolder.textLevel.setText(current.plantLevel);
     }
     // return total item from List
     @Override
@@ -82,6 +83,7 @@ public class AdapterPlant extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         TextView textName;
         TextView textBirth;
         TextView textType;
+        TextView textLevel;
 
         // create constructor to get widget reference
         public MyHolder(View itemView) {
@@ -89,6 +91,7 @@ public class AdapterPlant extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             textName = (TextView) itemView.findViewById(R.id.textName);
             textBirth = (TextView) itemView.findViewById(R.id.textBirth);
             textType = (TextView) itemView.findViewById(R.id.textType);
+            textLevel = (TextView) itemView.findViewById(R.id.textLevel);
             itemView.setOnClickListener(this);
         }
 
