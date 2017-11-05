@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.Collections;
@@ -60,6 +61,9 @@ public class AdapterQuest extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         // Get current position of item in RecyclerView to bind data and assign values from list
         MyHolder myHolder= (MyHolder) holder;
         DataQuest current = data.get(position);
+        if(current.questType == 1) myHolder.imageView.setImageResource(R.drawable.isthirsty);
+        else if(current.questType == 2) myHolder.imageView.setImageResource(R.drawable.iscold);
+        else if(current.questType == 3) myHolder.imageView.setImageResource(R.drawable.isdark);
         myHolder.textContent.setText(current.questContent);
         myHolder.textComplete.setText("퀘스트 완료시 친밀도 5상승!");
         myHolder.textTime.setText(current.questDate);
@@ -72,6 +76,7 @@ public class AdapterQuest extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
 
     class MyHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+        ImageView imageView;
         TextView textContent;
         TextView textComplete;
         TextView textTime;
@@ -79,6 +84,7 @@ public class AdapterQuest extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         // create constructor to get widget reference
         public MyHolder(View itemView) {
             super(itemView);
+            imageView = (ImageView) itemView.findViewById(R.id.imageQuest);
             textContent = (TextView) itemView.findViewById(R.id.textContent);
             textComplete = (TextView) itemView.findViewById(R.id.textComplete);
             textTime = (TextView) itemView.findViewById(R.id.textTime);

@@ -1,4 +1,4 @@
-package inandout.pliend.firebase;
+package inandout.pliend.service;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -13,13 +13,11 @@ import com.google.firebase.messaging.RemoteMessage;
 
 import java.io.IOException;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 
 import inandout.pliend.R;
 import inandout.pliend.activity.MainActivity;
 import inandout.pliend.app.AppConfig;
-import inandout.pliend.app.AppController;
 import inandout.pliend.helper.SQLiteHandler;
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
@@ -34,7 +32,7 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         //추가한것
-        sendNotification(remoteMessage.getData().get("message"));
+        // sendNotification(remoteMessage.getData().get("message"));
     }
 
     public void sendNotification(String messageBody) {
@@ -56,8 +54,6 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
         notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
-
-        sendQuestToServer(notificationBuilder);
     }
 
     private void sendQuestToServer(NotificationCompat.Builder message) {

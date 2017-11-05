@@ -1,26 +1,19 @@
 package inandout.pliend.activity;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -29,12 +22,15 @@ import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 
 import inandout.pliend.R;
 import inandout.pliend.app.AppConfig;
 import inandout.pliend.app.AppController;
 import inandout.pliend.helper.SQLiteHandler;
 import inandout.pliend.helper.SessionManager;
+import inandout.pliend.service.PersistentService;
+import inandout.pliend.service.RestartService;
 import inandout.pliend.store.TabPagerAdapter;
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
@@ -48,7 +44,6 @@ public class MainActivity extends AppCompatActivity {
 
     private TabLayout tabLayout;
     private ViewPager viewPager;
-    private TextView userName;
     private String name;
     private String email;
 
@@ -57,6 +52,9 @@ public class MainActivity extends AppCompatActivity {
 
     private SQLiteHandler db;
     private SessionManager session;
+
+    private Intent intent;
+    private RestartService restartService;
 
     Button btnMypage;
 
@@ -82,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
 
         FirebaseMessaging.getInstance().subscribeToTopic("news");
         final String token = FirebaseInstanceId.getInstance().getToken();
-
+        Log.d("token", token);
         if(session.isLoggedIn()) {
             HashMap<String, String> user = db.getUserDetails();
             name = user.get("name");
@@ -144,7 +142,7 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                viewPager.setCurrentItem(tab.getPosition());
+                viewPager.setCurrentItem(tab.getPosition(), false);
                 pagerAdapter.notifyDataSetChanged();
             }
 
@@ -154,9 +152,11 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
-                viewPager.setCurrentItem(tab.getPosition());
+                viewPager.setCurrentItem(tab.getPosition(), false);
             }
         });
+
+        //  initData();
     }
     @Override
     protected void onStart() {
@@ -164,23 +164,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
-    }
+    protected void onDestroy() {
+        super.onDestroy();
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.nav_drawer, menu);
-        userName = (TextView) findViewById(R.id.userName);
-        if(userName != null) {
-            userName.setText(name);
-        }
-        return true;
+        // Log.i("MainActivity","onDestroy");
+        //브로드 캐스트 해제
+        // unregisterReceiver(restartService);
     }
 
     @Override
@@ -203,19 +192,6 @@ public class MainActivity extends AppCompatActivity {
         finish();
     }
 
-    /*private String getPreferences() {
-        SharedPreferences pref = getSharedPreferences("pref", MODE_PRIVATE);
-        return pref.getString("token", "");
-    }
-
-    // 값 저장하기
-    private void savePreferences(String str) {
-        SharedPreferences pref = getSharedPreferences("pref", MODE_PRIVATE);
-        SharedPreferences.Editor editor = pref.edit();
-        editor.putString("token", str);
-        editor.commit();
-    }*/
-
     private void regEmailToPushServer(String email, String token) {
         // Add custom implementation, as needed.
         OkHttpClient client = new OkHttpClient();
@@ -226,7 +202,7 @@ public class MainActivity extends AppCompatActivity {
 
         //request
         Request request = new Request.Builder()
-                .url(AppConfig.URL_REG_EMAIL)
+                .url(AppConfig.URL_REG_TOKEN)
                 .post(body)
                 .build();
 
@@ -235,5 +211,17 @@ public class MainActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void initData(){
+        //리스타트 서비스 생성
+        restartService = new RestartService();
+        intent = new Intent(MainActivity.this, PersistentService.class);
+
+        IntentFilter intentFilter = new IntentFilter("inandout.pliend.service.PersistentService");
+        //브로드 캐스트에 등록
+        registerReceiver(restartService, intentFilter);
+        // 서비스 시작
+        startService(intent);
     }
 }

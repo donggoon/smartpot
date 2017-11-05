@@ -6,7 +6,8 @@ public class DataQuest {
     public int questMonth;
     public int questDay;
     public int questHour;
-    public int questMinute;
+    public String questMinute;
     public int questAm_pm;
     public String questDate;
+    public int questType;
 }

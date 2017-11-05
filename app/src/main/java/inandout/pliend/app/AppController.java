@@ -26,6 +26,10 @@ public class AppController extends Application {
 	private String plantLevel;
 	private String machineName;
 	private String userEmail;
+	private boolean isPlantTabSelected = false;
+	private boolean isMachineTabSelected = false;
+	private boolean isQuestTabSelected = false;
+	private boolean isAnalyzeTabSelected = false;
 
 	public boolean getIsPlantRegister() { return isPlantRegister; }
 	public void setIsPlantRegister(boolean isPlantRegister) { this.isPlantRegister = isPlantRegister; }
@@ -50,6 +54,12 @@ public class AppController extends Application {
 
 	public String getUserEmail() { return userEmail; }
 	public void setUserEmail(String userEmail) { this.userEmail = userEmail; }
+
+	public boolean getIsPlantTabSelected() { return isPlantTabSelected; }
+	public void setIsPlantTabSelected(boolean isPlantTabSelected) { this.isPlantTabSelected = isPlantTabSelected; }
+
+	public boolean getIsQuestTabSelected() { return isQuestTabSelected; }
+	public void setIsQuestTabSelected(boolean isQuestTabSelected) { this.isQuestTabSelected = isQuestTabSelected; }
 
 	@Override
 	public void onCreate() {

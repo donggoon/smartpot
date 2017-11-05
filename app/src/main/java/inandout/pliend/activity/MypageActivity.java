@@ -3,28 +3,35 @@ package inandout.pliend.activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
 
@@ -38,23 +45,24 @@ public class MypageActivity extends AppCompatActivity{
     TextView textEmail;
     private SessionManager session;
 
-    private static final int PICK_FROM_CAMERA = 0;
-    private static final int PICK_FROM_ALBUM = 1;
-    private static final int CROP_FROM_IMAGE = 2;
-
-    private Uri mImageCaptureUri;
+    private static final int REQUEST_TAKE_PHOTO = 0;
+    private static final int REQUEST_IMAGE_CAPTURE = 1;
+    private static final int REQUEST_IMAGE_CROP = 2;
+    Uri photoURI = null;
 
     private FirebaseAuth mAuth;
     private FirebaseUser mUser;
 
-    private ImageView iv_UserPhoto;
-    private int id_view;
-    private String absoultePath;
+    ImageView ivCapture;
+
+    private SharedPreferences sharedPreferences;
+    private SharedPreferences getSharedPreferences;
+    private SharedPreferences.Editor editor;
 
     final Context context = this;
 
-    ImageView profile;
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,7 +73,19 @@ public class MypageActivity extends AppCompatActivity{
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeAsUpIndicator(R.drawable.ic_clear_white_24dp);
 
+        mAuth = FirebaseAuth.getInstance();
+        mUser = mAuth.getCurrentUser();
+
+        ivCapture = (ImageView)findViewById(R.id.insert_picture);
         session = new SessionManager(getApplicationContext());
+
+        getSharedPreferences = getSharedPreferences("image", MODE_PRIVATE);
+        String image = getSharedPreferences.getString("imagestrings","");
+        Bitmap bit = StringToBitMap(image);
+        Drawable dr = getDrawableFromBitmap(bit);
+
+        ivCapture.setBackground(null);
+        ivCapture.setBackground(dr);
 
         if(Build.VERSION.SDK_INT>=21){
             getWindow().setStatusBarColor(Color.parseColor("#43A047"));
@@ -128,6 +148,12 @@ public class MypageActivity extends AppCompatActivity{
             SignUpPhotoActivity.this.finish();
         }*/
         if(v.getId() == R.id.insert_picture){
+            DialogInterface.OnClickListener cameraListener = new DialogInterface.OnClickListener(){
+                @Override
+                public void onClick(DialogInterface dialog, int which){
+                    dispatchTakePictureIntent();
+                }
+            };
             DialogInterface.OnClickListener albumListener = new DialogInterface.OnClickListener(){
                 @Override
                 public void onClick(DialogInterface dialog, int which){
@@ -141,99 +167,181 @@ public class MypageActivity extends AppCompatActivity{
                 }
             };
             new AlertDialog.Builder(context).setTitle("업로드할 이미지 선택")
-
-                    .setNeutralButton("앨범선택", albumListener)
+                    .setNeutralButton("사진촬영",cameraListener)
+                    .setPositiveButton("앨범선택", albumListener)
                     .setNegativeButton("취소",cancelListener)
                     .show();
         }
     }
 
-    //앨범에서 이미지 가져오기
-    public void doTakeAlbumAction(){
-        Intent intent = new Intent(Intent.ACTION_PICK);
-        intent.setType(MediaStore.Images.Media.CONTENT_TYPE);
-        startActivityForResult(intent, PICK_FROM_ALBUM);
-    }
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data){
-        super.onActivityResult(requestCode,resultCode,data);
-        if(requestCode!=RESULT_OK)
-            return;
 
-        switch (requestCode){
-            case PICK_FROM_ALBUM: {
-                mImageCaptureUri = data.getData();
-                Log.d("SmartWheel",mImageCaptureUri.getPath().toString());
-            }
+        if (resultCode != RESULT_OK) {
+            Toast.makeText(getApplicationContext(), "onActivityResult : RESULT_NOT_OK", Toast.LENGTH_LONG).show();
+        }
+        switch (requestCode) {
 
-            case PICK_FROM_CAMERA: {
-                Intent intent = new Intent("com.android.camera.action.CROP");
-                intent.setDataAndType(mImageCaptureUri,"image/*");
+            case REQUEST_TAKE_PHOTO: // 앨범이미지 가져오기
+                photoURI = data.getData();
+                //break; //바로 cropImage()로 전달되도록
+                Log.d("byk", photoURI.toString());
 
-                intent.putExtra("outputX",200); // x축 크기
-                intent.putExtra("outputY",200); // y축 크기
-                intent.putExtra("aspectX",1); // crop 박스의 x 축 비율
-                intent.putExtra("aspectY",1); // crop 박스의 y 축 비율
-                intent.putExtra("scale",true);
-                intent.putExtra("return-data",true);
-                startActivityForResult(intent,CROP_FROM_IMAGE);
-                break;
-            }
+                try {
+                    Bitmap ib = MediaStore.Images.Media.getBitmap(getContentResolver(), photoURI);
+                    Log.d("bykk",ib.toString());
+                    ivCapture.setBackground(null);
+                    Drawable d = getDrawableFromBitmap(ib);
 
-            case CROP_FROM_IMAGE: {
-                if(resultCode != RESULT_OK){return;}
-                final Bundle extras = data.getExtras();
-
-                String filePath = Environment.getExternalStorageDirectory().getAbsolutePath()+"/SmartWheel"+ System.currentTimeMillis()+".jpg";
-
-                if(extras!= null){
-                    Bitmap photo = extras.getParcelable("data");
-                    iv_UserPhoto.setImageBitmap(photo);
-
-                    storeCropImage(photo,filePath);
-                    absoultePath = filePath;
-                    break;
+                    ivCapture.setBackground(d);
+                    Log.d("bykk",d.toString());
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
 
-                File f = new File(mImageCaptureUri.getPath());
-                if(f.exists()){f.delete();}
-            }
 
-        }
-    }
+                Bitmap save = null;
+                try {
+                    save = MediaStore.Images.Media.getBitmap(getContentResolver(), photoURI);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                String image = BitMapToString(save);
+                sharedPreferences = getSharedPreferences("image", MODE_PRIVATE);
+                editor = sharedPreferences.edit();
+                editor.putString("imagestrings",image);
 
-    private void storeCropImage(Bitmap bitmap, String filePath){
-        String dirPath = Environment.getExternalStorageDirectory().getAbsolutePath()+"/SmartWheel";
-        File directory_SmartWheel = new File(dirPath);
+                editor.commit();
 
-        if(!directory_SmartWheel.exists()){directory_SmartWheel.mkdir();}
-        File copyFile = new File(filePath);
-        BufferedOutputStream out = null;
+                break;
 
-        try{
-            copyFile.createNewFile();
-            out = new BufferedOutputStream(new FileOutputStream(copyFile));
-            bitmap.compress(Bitmap.CompressFormat.JPEG,100,out);
+            case REQUEST_IMAGE_CAPTURE:
+                //cropImage();
 
-            sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(copyFile)));
+                Bitmap bmp = BitmapFactory.decodeFile(photoURI.getPath());
 
-            out.flush();
-            out.close();
+                Log.d("byk",data.getExtras().toString());
 
-        } catch (IOException e) {
-            e.printStackTrace();
+                ivCapture.setBackground(null);
+                Drawable d = getDrawableFromBitmap(bmp);
+                ivCapture.setBackground(d);
+
+                break;
+            case REQUEST_IMAGE_CROP:
+
+                Bitmap photo = BitmapFactory.decodeFile(photoURI.getPath());
+
+                ivCapture.setImageBitmap(photo);
+                //Bitmap photo = BitmapFactory.decodeFile(mCurrentPhotoPath);
+                // photo가져올 때 옵션 지정 가능, 아래는 예
+              /*  BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inInputShareable = true;
+                options.inDither=false;
+                options.inTempStorage=new byte[32 * 1024];
+                options.inPurgeable = true;
+                options.inJustDecodeBounds = false;*/
+
+
+                break;
+
         }
     }
 
     private void logoutUser() {
-        // mAuth.signOut();
         session.setLogin(false);
-
+        mAuth.signOut();
+        db.deleteUsers();
         // Launching the login activity
 
-        Intent intent = new Intent(MypageActivity.this, MainActivity.class);
+        Intent intent = new Intent(MypageActivity.this, SignInActivity.class);
         startActivity(intent);
         finish();
     }
+
+
+    private void dispatchTakePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            File photoFile = null;
+            try {
+                photoFile = createImageFile(); // 사진찍은 후 저장할 임시 파일(껍데기)
+            } catch (IOException ex) {
+                Toast.makeText(getApplicationContext(), "createImageFile Failed", Toast.LENGTH_LONG).show();
+            }
+
+            if (photoFile != null) {
+                Intent mediaScanIntent = new Intent( Intent.ACTION_MEDIA_SCANNER_SCAN_FILE ); // 동기화
+                photoURI = Uri.fromFile(photoFile); // 임시 파일의 위치,경로 가져옴
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI); // 임시 파일 위치에 저장
+                mediaScanIntent.setData(photoURI); // 동기화
+                this.sendBroadcast(mediaScanIntent); // 동기화
+                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+            }
+        }
+    }
+
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String imageFileName = "tmp_" + String.valueOf(System.currentTimeMillis());
+
+        File storageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "FloMate/");
+
+
+        File file = File.createTempFile(imageFileName, ".jpg", storageDir);
+
+        return file;
+    }
+
+    private void doTakeAlbumAction()
+    {
+        // 앨범 호출
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        intent.setType(android.provider.MediaStore.Images.Media.CONTENT_TYPE);
+        startActivityForResult(intent, REQUEST_TAKE_PHOTO);
+    }
+
+    private void cropImage() {
+        Intent cropIntent = new Intent("com.android.camera.action.CROP");
+
+        cropIntent.setDataAndType(photoURI, "image/*");
+        cropIntent.putExtra("scale", true);
+        cropIntent.putExtra("output", photoURI); // 크랍된 이미지를 해당 경로에 저장
+        startActivityForResult(cropIntent, REQUEST_IMAGE_CROP);
+    }
+
+    public Drawable getDrawableFromBitmap(Bitmap bitmap){
+        Drawable d = new BitmapDrawable(bitmap);
+        return d;
+    }
+
+    public String BitMapToString(Bitmap bitmap){
+        ByteArrayOutputStream baos=new  ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG,100, baos);
+        byte [] b=baos.toByteArray();
+        String temp= Base64.encodeToString(b, Base64.DEFAULT);
+        return temp;
+    }
+
+    public Bitmap StringToBitMap(String encodedString){
+        try{
+            byte [] encodeByte=Base64.decode(encodedString,Base64.DEFAULT);
+            Bitmap bitmap=BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
+            return bitmap;
+        }catch(Exception e){
+            e.getMessage();
+            return null;
+        }
+    }
+
+    public static Bitmap getResizedBitmap(Resources resources, int id, int size, int width, int height){
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inSampleSize = size;
+        Bitmap src = BitmapFactory.decodeResource(resources, id, options);
+        Bitmap resized = Bitmap.createScaledBitmap(src, width, height, true);
+        return resized;
+    }
+
+
 }

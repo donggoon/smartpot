@@ -44,7 +44,7 @@ public class SQLiteHandler extends SQLiteOpenHelper {
 				+ KEY_CREATED_AT + " TEXT" + ")";*/
 		String CREATE_LOGIN_TABLE = "CREATE TABLE " + TABLE_USER + "("
 				+ KEY_NAME + " TEXT,"
-				+ KEY_EMAIL + " TEXT UNIQUE," + KEY_UID + " TEXT," + ")";
+				+ KEY_EMAIL + " TEXT UNIQUE," + KEY_UID + " TEXT" + ")";
 		db.execSQL(CREATE_LOGIN_TABLE);
 
 		Log.d(TAG, "Database tables created");
@@ -93,9 +93,9 @@ public class SQLiteHandler extends SQLiteOpenHelper {
 		cursor.moveToFirst();
         if (cursor.getCount() > 0) {
             // user.put("id", cursor.getString(0));
-            user.put("name", cursor.getString(1));
-            user.put("email", cursor.getString(2));
-            user.put("uid", cursor.getString(3));
+            user.put("name", cursor.getString(0));
+            user.put("email", cursor.getString(1));
+            user.put("uid", cursor.getString(2));
 			// user.put("plant", cursor.getString(4));
             // user.put("created_at", cursor.getString(4));
         }

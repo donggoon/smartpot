@@ -72,7 +72,7 @@ public class AnalyzeFragment extends Fragment {
             SignUpPhotoActivity.this.startActivity(mainIntent);
             SignUpPhotoActivity.this.finish();
         }*/
-                if(v.getId() == R.id.btn_add_plant_image){
+                /*if(v.getId() == R.id.btn_add_plant_image){
                     DialogInterface.OnClickListener cameraListener = new DialogInterface.OnClickListener(){
                         @Override
                         public void onClick(DialogInterface dialog, int which){
@@ -96,7 +96,7 @@ public class AnalyzeFragment extends Fragment {
                             .setNeutralButton("앨범선택", albumListener)
                             .setNegativeButton("취소",cancelListener)
                             .show();
-                }
+                }*/
 
             }
         });

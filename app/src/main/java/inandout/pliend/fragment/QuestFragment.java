@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,9 +13,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
-
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -53,25 +51,27 @@ public class QuestFragment extends Fragment {
     private RecyclerView mRVQuest;
     private AdapterQuest mAdapter;
 
-    private FirebaseAuth mAuth;
-    private FirebaseUser mUser;
-
     private SQLiteHandler db;
     String email;
 
     View view;
 
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        // SqLite database handler
+        db = new SQLiteHandler(getActivity());
+        HashMap<String, String> user = db.getUserDetails();
+        email = user.get("email");
+
+        new QuestFragment.AsyncFetch(email, getActivity()).execute();
+    }
+
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.activity_recycler_quest, null);
 
-        db = new SQLiteHandler(getActivity());
-        HashMap<String, String> user  = db.getUserDetails();
-        email = user.get("email");
-        /*mAuth = FirebaseAuth.getInstance();
-        mUser = mAuth.getCurrentUser();
-        email = mUser.getEmail();
-*/
-        new QuestFragment.AsyncFetch(email, getActivity()).execute();
+        FloatingActionButton floatingActionButton = (FloatingActionButton) view.findViewById(R.id.btn_bluetooth);
+        floatingActionButton.setVisibility(View.GONE);
 
         return view;
     }
@@ -196,13 +196,14 @@ public class QuestFragment extends Fragment {
                         questData.questMonth = Integer.parseInt(json_data.getString("month"));
                         questData.questDay = Integer.parseInt(json_data.getString("day"));
                         questData.questHour = Integer.parseInt(json_data.getString("hour"));
-                        questData.questMinute = Integer.parseInt(json_data.getString("minute"));
+                        questData.questMinute = json_data.getString("minute");
                         questData.questAm_pm = Integer.parseInt(json_data.getString("am_pm"));
+                        questData.questType = Integer.parseInt(json_data.getString("type"));
 
-                        if (questData.questYear < year) {
+                        if (questData.questYear < year % 2000) {
                             questData.questDate = String.valueOf(questData.questYear) + "/" +
                                     String.valueOf(questData.questMonth) + "/" + String.valueOf(questData.questDay);
-                        } else if (questData.questMonth < month) {
+                        } else if (questData.questMonth < month + 1) {
                             questData.questDate = String.valueOf(questData.questYear) + "/" +
                                     String.valueOf(questData.questMonth) + "/" + String.valueOf(questData.questDay);
                         } else if (questData.questDay < day) {
@@ -210,9 +211,9 @@ public class QuestFragment extends Fragment {
                                     String.valueOf(questData.questMonth) + "/" + String.valueOf(questData.questDay);
                         } else {
                             if (questData.questAm_pm == 1) {
-                                questData.questDate = "오후 " + String.valueOf(questData.questHour) + ":" + String.valueOf(questData.questMinute);
+                                questData.questDate = "오후 " + String.valueOf(questData.questHour) + ":" + questData.questMinute;
                             } else {
-                                questData.questDate = "오전 " + String.valueOf(questData.questHour) + ":" + String.valueOf(questData.questMinute);
+                                questData.questDate = "오전 " + String.valueOf(questData.questHour) + ":" + questData.questMinute;
                             }
                         }
                         data.add(questData);

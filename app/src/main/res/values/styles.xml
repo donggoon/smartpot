@@ -11,13 +11,12 @@
         <item name="colorPrimaryDark">#FFFFFF</item>
         <item name="colorAccent">#FFFFFF</item>
     </style>
+
     <style name="AppTheme.NoActionBar">
-
         <item name="windowActionBar">false</item>
-
         <item name="windowNoTitle">true</item>
-
     </style>
+
     <style name="ActionBarTextColor" parent="android:TextAppearance.Holo.Widget.ActionBar.Title">
         <item name="android:textColor">#FFFFFF</item>
     </style>
@@ -28,6 +27,7 @@
         <item name="android:titleTextStyle">@style/ActionBarTextColor</item>
         <item name="android:textColor">#FFFFFF</item>
     </style>
+
     <style name="AppBaseTheme" parent="@style/Theme.AppCompat.Light">
         <item name="actionBarStyle">@style/MyActionBar</item>
     </style>
@@ -76,4 +76,9 @@
         <item name="android:textSize">36sp</item>
     </style>
 
+    <style name="MyAlertDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="colorAccent">#4CAF50</item>
+        <item name="android:textColorPrimary">#000000</item>
+        <item name="android:background">#FFFFFF</item>
+    </style>
 </resources>

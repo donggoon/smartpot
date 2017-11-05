@@ -18,8 +18,7 @@
         <ImageView
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:id="@+id/imageView4"
-            android:background="@drawable/flower"
+            android:id="@+id/imageQuest"
             android:layout_gravity="center_vertical"
             android:layout_column="19"
             android:paddingRight="5dp"/>

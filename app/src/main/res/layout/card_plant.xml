@@ -22,7 +22,7 @@
                 android:layout_height="160dp"
                 android:scaleType="centerCrop"
                 android:id="@+id/bg_image"
-                android:src="@drawable/background"/>
+                android:src="@drawable/bg"/>
 
             <View
                 android:layout_width="match_parent"
@@ -106,7 +106,6 @@
                 android:layout_below="@+id/textBirth"
                 android:layout_alignLeft="@+id/line"
                 android:layout_alignStart="@+id/line" />
-
 
             <TextView
                 android:layout_width="wrap_content"

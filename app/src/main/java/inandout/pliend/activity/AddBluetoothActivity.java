@@ -20,6 +20,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -30,14 +31,8 @@ import inandout.pliend.R;
 import inandout.pliend.app.AppController;
 
 
-public class AddMachineActivity extends Activity {
+public class AddBluetoothActivity extends Activity {
     // 사용자 정의 함수로 블루투스 활성 상태의 변경 결과를 App으로 알려줄때 식별자로 사용됨(0보다 커야함)
-    public void startBluetoothSettings(Activity activity) {
-
-        Intent settingsIntent = new Intent(Settings.ACTION_BLUETOOTH_SETTINGS);
-        activity.startActivity(settingsIntent);
-
-    }
     static final int REQUEST_ENABLE_BT = 10;
     int mPariedDeviceCount = 0;
     Set<BluetoothDevice> mDevices;
@@ -66,17 +61,21 @@ public class AddMachineActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_bluetooth);
+        mEditReceive = (EditText) findViewById(R.id.receiveString);
+        mEditSend = (EditText) findViewById(R.id.sendString);
+        mButtonSend = (Button) findViewById(R.id.sendButton);
 
-        /*mButtonSend.setOnClickListener(new OnClickListener() {
+        mButtonSend.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
                 // 문자열 전송하는 함수(쓰레드 사용 x)
+                // sendData("2");
                 sendData(mEditSend.getText().toString());
                 mEditSend.setText("");
             }
-        });*/
+        });
 
         // 블루투스 활성화 시키는 메소드
         checkBluetooth();
@@ -99,7 +98,7 @@ public class AddMachineActivity extends Activity {
     }
 
     // 문자열 전송하는 함수(쓰레드 사용 x)
-    void sendData(String msg) {
+    public void sendData(String msg) {
         msg += mStrDelimiter;  // 문자열 종료표시 (\n)
         try {
             // getBytes() : String을 byte로 변환
@@ -136,7 +135,12 @@ public class AddMachineActivity extends Activity {
             // 2. 데이터를 받기 위한 InputStream
             mOutputStream = mSocket.getOutputStream();
             mInputStream = mSocket.getInputStream();
-
+            Log.d("check", "messaging");
+            new Thread() {
+                public void run() {
+                    sendData("1");
+                }
+            }.start();
             // 데이터 수신 준비.
             beginListenForData();
 
@@ -149,10 +153,13 @@ public class AddMachineActivity extends Activity {
 
     // 데이터 수신(쓰레드 사용 수신된 메시지를 계속 검사함)
     void beginListenForData() {
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
+        /*Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);*/
 
         AppController.getInstance().setIsBluetooth(true);
+        /*Intent intent = new Intent(AddBluetoothActivity.this, MainActivity.class);
+        startActivity(intent);
+        finish();*/
 
         final Handler handler = new Handler();
 
@@ -234,7 +241,6 @@ public class AddMachineActivity extends Activity {
         }
         listItems.add("취소");  // 취소 항목 추가.
 
-
         // CharSequence : 변경 가능한 문자열.
         // toArray : List형태로 넘어온것 배열로 바꿔서 처리하기 위한 toArray() 함수.
         final CharSequence[] items = listItems.toArray(new CharSequence[listItems.size()]);
@@ -310,9 +316,13 @@ public class AddMachineActivity extends Activity {
     @Override
     protected void onDestroy() {
         try {
+            sendData("0");
+            Log.d("onDestroy", "bluetooth");
             mWorkerThread.interrupt(); // 데이터 수신 쓰레드 종료
             mInputStream.close();
             mSocket.close();
+            AppController.getInstance().setIsBluetooth(false);
+            AppController.getInstance().setMachineName("");
         } catch (Exception e) {
         }
         super.onDestroy();
@@ -345,4 +355,17 @@ public class AddMachineActivity extends Activity {
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
+
+    public void disconnectDevice() {
+        try {
+            sendData("0");
+            mWorkerThread.interrupt(); // 데이터 수신 쓰레드 종료
+            mInputStream.close();
+            mSocket.close();
+            AppController.getInstance().setIsBluetooth(false);
+            AppController.getInstance().setMachineName("");
+        } catch (Exception e) {
+        }
+    }
+
 }

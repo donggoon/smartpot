@@ -4,13 +4,16 @@
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.BLUETOOTH"/>
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_SERVICE" />
 
     <application
         android:name="inandout.pliend.app.AppController"
         android:allowBackup="true"
-        android:icon="@drawable/sprout"
+        android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:roundIcon="@drawable/sprout"
+        android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
         <activity android:name=".activity.StartActivity">
@@ -55,7 +58,7 @@
         <activity
             android:theme="@style/AppBaseTheme"
             android:label="기기 등록"
-            android:name=".activity.AddMachineActivity"
+            android:name=".activity.AddBluetoothActivity"
             android:launchMode="singleTop"
             android:windowSoftInputMode="adjustPan" />
 
@@ -75,31 +78,50 @@
 
         <activity
             android:theme="@style/AppBaseTheme"
-            android:label="퀘스트"
-            android:name=".activity.QuestActivity"
-            android:launchMode="singleTop"
-            android:windowSoftInputMode="adjustPan" />
-
-        <activity
-            android:theme="@style/AppBaseTheme"
             android:label="성장도 분석"
             android:name=".activity.AnalyzeActivity"
             android:launchMode="singleTop"
             android:windowSoftInputMode="adjustPan" />
 
+        <activity
+            android:theme="@style/AppBaseTheme"
+            android:label="상세 정보 수정"
+            android:name=".activity.ModifyPlantActivity"
+            android:launchMode="singleTop"
+            android:windowSoftInputMode="adjustPan" />
+
         <service
-            android:name=".firebase.FirebaseMessagingService">
+            android:name=".service.FirebaseMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>
         </service>
 
         <service
-            android:name=".firebase.FirebaseInstanceIDService">
+            android:name=".service.FirebaseInstanceIDService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
             </intent-filter>
         </service>
+
+        <service
+            android:name="inandout.pliend.service.PersistentService"
+            android:enabled="true"
+            android:process=":remote" >
+        </service>
+
+        <receiver
+            android:name="inandout.pliend.service.RestartService"
+            android:enabled="true"
+            android:exported="false"
+            android:label="RestartService"
+            android:process=":remote" >
+            <intent-filter>
+                <action android:name="ACTION.RESTART.PersistentService" />
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
     </application>
 
 </manifest>

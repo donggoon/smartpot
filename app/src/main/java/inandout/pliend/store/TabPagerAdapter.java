@@ -5,8 +5,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
 import inandout.pliend.fragment.AnalyzeFragment;
-import inandout.pliend.fragment.PlantMainFragment;
-import inandout.pliend.fragment.MachineMainFragment;
+import inandout.pliend.fragment.PlantFragment;
+import inandout.pliend.fragment.MachineFragment;
 import inandout.pliend.fragment.QuestFragment;
 
 public class TabPagerAdapter extends FragmentStatePagerAdapter {
@@ -21,26 +21,34 @@ public class TabPagerAdapter extends FragmentStatePagerAdapter {
     @Override
     public Fragment getItem(int position) {
         // Returning the current tabs
+        final Fragment result;
         switch (position) {
             case 0:
-                PlantMainFragment plantMainFragment = new PlantMainFragment();
-                return plantMainFragment;
-
+                // PlantFragment plantMainFragment = new PlantFragment();
+                // return plantMainFragment;
+                result = new PlantFragment();
+                break;
             case 1:
-                MachineMainFragment machineMainFragment = new MachineMainFragment();
-                return machineMainFragment;
-
+                /*MachineFragment machineMainFragment = new MachineFragment();
+                return machineMainFragment;*/
+                result = new MachineFragment();
+                break;
             case 2:
-                QuestFragment questFragment = new QuestFragment();
-                return questFragment;
-
+                /*QuestFragment questFragment = new QuestFragment();
+                return questFragment;*/
+                result = new QuestFragment();
+                break;
             case 3:
-                AnalyzeFragment analyzeFragment = new AnalyzeFragment();
-                return analyzeFragment;
-
+                /*AnalyzeFragment analyzeFragment = new AnalyzeFragment();
+                return analyzeFragment;*/
+                result = new AnalyzeFragment();
+                break;
             default:
-                return null;
+                // return null;
+                result = null;
+                break;
         }
+        return result;
     }
     private static int NUM_OF_VIEWS = 4;
     @Override
@@ -51,6 +59,6 @@ public class TabPagerAdapter extends FragmentStatePagerAdapter {
     @Override
     public int getItemPosition(Object object) {
         // POSITION_NONE makes it possible to reload the PagerAdapter
-        return POSITION_NONE;
+        return POSITION_UNCHANGED;
     }
 }

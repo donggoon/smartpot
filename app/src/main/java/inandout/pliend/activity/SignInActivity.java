@@ -72,14 +72,8 @@ public class SignInActivity extends BaseActivity implements
     // [END declare_auth]
 
     private GoogleApiClient mGoogleApiClient;
-    private TextView mStatusTextView;
-    private TextView mDetailTextView;
 
     private Button btnLogin;
-
-    public EditText getInputEmail() {
-        return inputEmail;
-    }
 
     private Button btnLinkToRegister;
     private EditText inputEmail;
@@ -119,11 +113,29 @@ public class SignInActivity extends BaseActivity implements
         // Check if user is already logged in or not
         if (session.isLoggedIn()) {
             // User is already logged in. Take him to main activity
-            Intent intent = new Intent(SignInActivity.this, StartActivity.class);
+            Intent intent = new Intent(SignInActivity.this, MainActivity.class);
             startActivity(intent);
             finish();
         }
 
+        // [START config_signin]
+        // Configure Google Sign In
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+        // [END config_signin]
+
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                .build();
+
+        // [START initialize_auth]
+        mAuth = FirebaseAuth.getInstance();
+        // [END initialize_auth]
+
+        Log.d("check", "in onCreate");
         // Login button Click Event
         btnLogin.setOnClickListener(new View.OnClickListener() {
 
@@ -155,23 +167,6 @@ public class SignInActivity extends BaseActivity implements
                 finish();
             }
         });
-
-        // [START config_signin]
-        // Configure Google Sign In
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
-                .requestEmail()
-                .build();
-        // [END config_signin]
-
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
-                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-                .build();
-
-        // [START initialize_auth]
-        mAuth = FirebaseAuth.getInstance();
-        // [END initialize_auth]
     }
 
     // [START on_start_check_user]
@@ -188,7 +183,7 @@ public class SignInActivity extends BaseActivity implements
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
+        Log.d("check", "in onActivityResult");
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == RC_SIGN_IN) {
             Log.d("sign in", "1");
@@ -200,6 +195,7 @@ public class SignInActivity extends BaseActivity implements
                 GoogleSignInAccount account = result.getSignInAccount();
                 firebaseAuthWithGoogle(account);
             } else {
+                Log.d("failed to google signin", "10");
                 // Google Sign In failed, update UI appropriately
                 // [START_EXCLUDE]
                 // updateUI(null);
@@ -254,6 +250,7 @@ public class SignInActivity extends BaseActivity implements
     private void signIn() {
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
         startActivityForResult(signInIntent, RC_SIGN_IN);
+        finish();
     }
     // [END signin]
 
@@ -438,7 +435,7 @@ public class SignInActivity extends BaseActivity implements
 
                     Toast.makeText(getApplicationContext(), "로그인에 성공했습니다!", Toast.LENGTH_LONG).show();
                     // db.updatePlant(email);
-                    Log.d("가입 성공", "1");
+                    Log.d("로그인 성공", "1");
 
                     Intent intent = new Intent(SignInActivity.this, MainActivity.class);
                     startActivity(intent);
@@ -449,9 +446,9 @@ public class SignInActivity extends BaseActivity implements
                     Toast.makeText(getApplicationContext(), result.toString(), Toast.LENGTH_LONG).show();
                 }
             } else {
-                Toast.makeText(getApplicationContext(), "회원가입에 실패했습니다!", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "로그인에 실패했습니다!", Toast.LENGTH_LONG).show();
                 // db.updatePlant(email);
-                Log.d("가입 실패", "1");
+                Log.d("로그인 실패", "1");
             }
         }
     }

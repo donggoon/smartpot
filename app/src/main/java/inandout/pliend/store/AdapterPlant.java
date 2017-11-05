@@ -55,7 +55,7 @@ public class AdapterPlant extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     // Inflate the layout when ViewHolder created
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = inflater.inflate(R.layout.card_item_one, parent,false);
+        View view = inflater.inflate(R.layout.card_plant, parent,false);
         MyHolder holder = new MyHolder(view);
 
         return holder;

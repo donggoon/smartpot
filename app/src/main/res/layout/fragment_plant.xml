@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/activity_recycler"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:orientation="vertical" android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:weightSum="100">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginBottom="12dp"
+            android:layout_weight="40"
+            android:gravity="center">
+
+            <ImageView
+                android:id="@+id/img_cover"
+                android:layout_width="match_parent"
+                android:layout_height="156dp"
+                android:background="@drawable/bg"
+                android:layout_alignParentTop="true" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_alignBottom="@id/img_cover"
+                android:layout_alignTop="@id/img_cover"
+                android:layout_centerVertical="true"
+                android:gravity="end|top"
+                android:padding="6dp"
+                android:text="커버 사진 등록" />
+
+            <ImageView
+                android:id="@+id/img_profile"
+                android:onClick="insert_profile_onclick"
+                android:layout_width="156dp"
+                android:layout_height="156dp"
+                android:layout_alignTop="@+id/img_cover"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="65dp"
+                android:src="@drawable/bajil_pro"
+                android:background="@drawable/frame"
+                android:layout_alignParentBottom="true" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="50"
+            android:orientation="vertical"
+            android:weightSum="10">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="2"
+                android:layout_gravity="center"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="식물이"
+                android:textColor="#000000"
+                android:textSize="25sp"
+                android:textStyle="bold"
+                android:id="@+id/textName" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1">
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="7"
+                android:orientation="vertical"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:weightSum="5">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:layout_marginBottom="@dimen/activity_vertical_margin"
+                    android:gravity="start|center">
+
+                    <ImageView
+                        android:layout_width="15sp"
+                        android:layout_height="15sp"
+                        android:paddingLeft="@dimen/album_title_padding"
+                        android:paddingRight="@dimen/album_title_padding"
+                        android:background="@drawable/birth"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                        android:text="생일"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+                        android:ellipsize="end"
+                        android:textColor="#000000"
+                        android:id="@+id/textBirth" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:layout_marginBottom="@dimen/activity_vertical_margin"
+                    android:gravity="start|center">
+
+                    <ImageView
+                        android:layout_width="15sp"
+                        android:layout_height="15sp"
+                        android:paddingLeft="@dimen/album_title_padding"
+                        android:paddingRight="@dimen/album_title_padding"
+                        android:background="@drawable/leaf"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                        android:text="종류"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+                        android:ellipsize="end"
+                        android:textColor="#000000"
+                        android:id="@+id/textType" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:layout_marginBottom="@dimen/activity_vertical_margin"
+                    android:gravity="start|center">
+
+                    <ImageView
+                        android:layout_width="15sp"
+                        android:layout_height="15sp"
+                        android:background="@drawable/growth"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                        android:text="레벨"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+                        android:ellipsize="end"
+                        android:textColor="#000000"
+                        android:id="@+id/textLevel"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:layout_marginBottom="@dimen/activity_vertical_margin"
+                    android:gravity="start|center">
+
+                    <ImageView
+                        android:layout_width="15sp"
+                        android:layout_height="15sp"
+                        android:background="@drawable/ic_person_black_24dp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+                        android:ellipsize="end"
+                        android:textColor="#000000"
+                        android:id="@+id/textOwner"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:layout_marginBottom="@dimen/activity_vertical_margin">
+
+                    <Button
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:layout_marginLeft="25dp"
+                        android:gravity="left"
+                        android:background="@null"
+                        android:textStyle="bold"
+                        android:textSize="15sp"
+                        android:textColor="@color/colorPrimary"
+                        android:text="상세 정보 수정"
+                        android:id="@+id/btnSetting" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/btn_bluetooth"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/fab_margin"
+        android:tint="@color/white"
+        android:src="@drawable/ic_add_black_24dp"
+        app:backgroundTint="@color/colorPrimary"/>
+</android.support.design.widget.CoordinatorLayout>

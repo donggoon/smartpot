@@ -13,7 +13,7 @@
         android:scrollbars="vertical" />
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/btn_add"
+        android:id="@+id/btn_bluetooth"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_gravity="bottom|end"
