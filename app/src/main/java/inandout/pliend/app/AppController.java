@@ -30,6 +30,10 @@ public class AppController extends Application {
 	private boolean isMachineTabSelected = false;
 	private boolean isQuestTabSelected = false;
 	private boolean isAnalyzeTabSelected = false;
+	private int currentHumi;
+	private int currentLight;
+	private int currentTemp;
+	private int statusType = 1;
 
 	public boolean getIsPlantRegister() { return isPlantRegister; }
 	public void setIsPlantRegister(boolean isPlantRegister) { this.isPlantRegister = isPlantRegister; }
@@ -60,6 +64,18 @@ public class AppController extends Application {
 
 	public boolean getIsQuestTabSelected() { return isQuestTabSelected; }
 	public void setIsQuestTabSelected(boolean isQuestTabSelected) { this.isQuestTabSelected = isQuestTabSelected; }
+
+	public int getStatusType() { return statusType; }
+	public void setStatusType(int statusType) { this.statusType = statusType; }
+
+	public int getCurrentHumi() { return currentHumi; }
+	public void setCurrentHumi(int currentHumi) { this.currentHumi = currentHumi; }
+
+	public int getCurrentLight() { return currentLight; }
+	public void setCurrentLight(int currentLight) { this.currentLight = currentLight; }
+
+	public int getCurrentTemp() { return currentTemp; }
+	public void setCurrentTemp(int currentTemp) { this.currentHumi = currentTemp; }
 
 	@Override
 	public void onCreate() {

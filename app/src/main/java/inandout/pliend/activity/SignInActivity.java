@@ -88,7 +88,7 @@ public class SignInActivity extends BaseActivity implements
         setContentView(R.layout.activity_signin);
 
         if(Build.VERSION.SDK_INT>=21){
-            getWindow().setStatusBarColor(Color.parseColor("#43A047"));
+            getWindow().setStatusBarColor(Color.parseColor("#000000"));
         }
 
         inputEmail = (EditText) findViewById(R.id.email);

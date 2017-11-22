@@ -75,7 +75,7 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_registration);
 
         if(Build.VERSION.SDK_INT>=21){
-            getWindow().setStatusBarColor(Color.parseColor("#43A047"));
+            getWindow().setStatusBarColor(Color.parseColor("#000000"));
         }
 
         inputFullName = (EditText) findViewById(R.id.name);

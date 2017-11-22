@@ -16,8 +16,11 @@ import java.util.Calendar;
 import java.util.HashMap;
 
 import inandout.pliend.R;
+import inandout.pliend.activity.AddBluetoothActivity;
 import inandout.pliend.activity.MainActivity;
 import inandout.pliend.app.AppConfig;
+import inandout.pliend.app.AppController;
+import inandout.pliend.fragment.DisplayFragment;
 import inandout.pliend.helper.SQLiteHandler;
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
@@ -32,10 +35,14 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         //추가한것
-        // sendNotification(remoteMessage.getData().get("message"));
+        Log.d("onMessageReceived", "10");
+        String body = remoteMessage.getNotification().getBody();
+        sendNotification(body);
     }
 
-    public void sendNotification(String messageBody) {
+    public void sendNotification(final String messageBody) {
+        Log.d("sendNotification", "20");
+        Log.d("messageBody", messageBody);
         Intent intent = new Intent(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
@@ -43,15 +50,51 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
 
         Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
-                .setSmallIcon(R.drawable.sprout)
+                .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentTitle("FloMate")
                 .setContentText(messageBody)
                 .setAutoCancel(true)
                 .setSound(defaultSoundUri)
-                .setContentIntent(pendingIntent);
+                .setContentIntent(pendingIntent)
+                .setVisibility(1);
 
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        if (messageBody.equals("목이 말라요(o_o)")) {
+            AppController.getInstance().setStatusType(3);
+        } else if (messageBody.equals("너무 추워요(e_e)")) {
+            AppController.getInstance().setStatusType(7);
+        } else if (messageBody.equals("너무 어두워요(u_u)")) {
+            Log.d("check", "10");
+            AppController.getInstance().setStatusType(5);
+        }
+
+        if(AppController.getInstance().getIsBluetooth()) {
+            Log.d("a", "a");
+            if (messageBody.equals("목이 말라요(o_o)")) {
+                Log.d("b", "b");
+                ((AddBluetoothActivity) AddBluetoothActivity.mContext).sendData("3");
+                AppController.getInstance().setStatusType(3);
+            } else if (messageBody.equals("너무 추워요(e_e)")) {
+                Log.d("c", "c");
+                ((AddBluetoothActivity) AddBluetoothActivity.mContext).sendData("7");
+                AppController.getInstance().setStatusType(7);
+            } else if (messageBody.equals("너무 어두워요(u_u)")) {
+                Log.d("d", "d");
+                Log.d("check", "10");
+                ((AddBluetoothActivity) AddBluetoothActivity.mContext).sendData("5");
+                AppController.getInstance().setStatusType(5);
+            }
+        }/*
+            ((AddBluetoothActivity)AddBluetoothActivity.mContext).sendData();
+            new Thread() {
+                public void run() {
+                    Log.d("check", "1");
+                    AddBluetoothActivity addBluetoothActivity = new AddBluetoothActivity();
+
+                }
+            }.start();*/
 
         notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
     }

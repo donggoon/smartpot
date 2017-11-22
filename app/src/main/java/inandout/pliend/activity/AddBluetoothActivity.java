@@ -15,6 +15,7 @@ import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -33,6 +34,7 @@ import inandout.pliend.app.AppController;
 
 public class AddBluetoothActivity extends Activity {
     // 사용자 정의 함수로 블루투스 활성 상태의 변경 결과를 App으로 알려줄때 식별자로 사용됨(0보다 커야함)
+    public static Context mContext;
     static final int REQUEST_ENABLE_BT = 10;
     int mPariedDeviceCount = 0;
     Set<BluetoothDevice> mDevices;
@@ -61,21 +63,23 @@ public class AddBluetoothActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_bluetooth);
-        mEditReceive = (EditText) findViewById(R.id.receiveString);
+        setContentView(R.layout.activity_main);
+        mContext = this;
+       /* mEditReceive = (EditText) findViewById(R.id.receiveString);
         mEditSend = (EditText) findViewById(R.id.sendString);
-        mButtonSend = (Button) findViewById(R.id.sendButton);
+        mButtonSend = (Button) findViewById(R.id.sendButton);*/
 
-        mButtonSend.setOnClickListener(new OnClickListener() {
+        /*mButtonSend.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
                 // 문자열 전송하는 함수(쓰레드 사용 x)
                 // sendData("2");
+                Log.d("a", "10");
                 sendData(mEditSend.getText().toString());
                 mEditSend.setText("");
             }
-        });
+        });*/
 
         // 블루투스 활성화 시키는 메소드
         checkBluetooth();
@@ -104,6 +108,7 @@ public class AddBluetoothActivity extends Activity {
             // getBytes() : String을 byte로 변환
             // OutputStream.write : 데이터를 쓸때는 write(byte[]) 메소드를 사용함.
             // byte[] 안에 있는 데이터를 한번에 기록해 준다.
+            Log.d("a", "b");
             mOutputStream.write(msg.getBytes());  // 문자열 전송.
         } catch (Exception e) {  // 문자열 전송 도중 오류가 발생한 경우
             Toast.makeText(getApplicationContext(), "데이터 전송중 오류가 발생",
@@ -157,9 +162,9 @@ public class AddBluetoothActivity extends Activity {
         startActivity(intent);*/
 
         AppController.getInstance().setIsBluetooth(true);
-        /*Intent intent = new Intent(AddBluetoothActivity.this, MainActivity.class);
+
+        Intent intent = new Intent(AddBluetoothActivity.this, MainActivity.class);
         startActivity(intent);
-        finish();*/
 
         final Handler handler = new Handler();
 

@@ -22,7 +22,7 @@
                 android:id="@+id/img_cover"
                 android:layout_width="match_parent"
                 android:layout_height="156dp"
-                android:background="@drawable/bg"
+                android:background="@drawable/wood_cover"
                 android:layout_alignParentTop="true" />
 
             <TextView
@@ -43,8 +43,7 @@
                 android:layout_alignTop="@+id/img_cover"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="65dp"
-                android:src="@drawable/bajil_pro"
-                android:background="@drawable/frame"
+                android:src="@drawable/plant_main"
                 android:layout_alignParentBottom="true" />
         </RelativeLayout>
 

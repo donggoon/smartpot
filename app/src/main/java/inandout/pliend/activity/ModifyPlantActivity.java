@@ -92,7 +92,7 @@ public class ModifyPlantActivity extends AppCompatActivity {
         actionBar.setHomeAsUpIndicator(R.drawable.ic_clear_white_24dp);
 
         if (Build.VERSION.SDK_INT >= 21) {
-            getWindow().setStatusBarColor(Color.parseColor("#43A047"));
+            getWindow().setStatusBarColor(Color.parseColor("#000000"));
         }
 
         currentName = (TextView) findViewById(R.id.currentName);

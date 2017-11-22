@@ -18,6 +18,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,6 +55,7 @@ import inandout.pliend.R;
 import inandout.pliend.activity.AddPlantActivity;
 import inandout.pliend.activity.ModifyPlantActivity;
 import inandout.pliend.app.AppConfig;
+import inandout.pliend.app.AppController;
 import inandout.pliend.helper.SQLiteHandler;
 import inandout.pliend.store.DataPlant;
 
@@ -475,6 +477,11 @@ public class PlantFragment extends Fragment {
                     textType.setText(data.get(0).plantType);
                     textLevel.setText(data.get(0).plantLevel);
                     textOwner.setText(name);
+
+                    AppController.getInstance().setPlantName(plant);
+                    AppController.getInstance().setPlantBirth(birth);
+                    AppController.getInstance().setPlantType(type);
+                    AppController.getInstance().setPlantLevel(growth);
 
                 } catch (JSONException e) {
                     // You to understand what actually error is and handle it appropriately

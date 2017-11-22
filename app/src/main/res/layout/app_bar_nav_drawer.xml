@@ -23,9 +23,25 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_gravity="left"
+                android:gravity="right|end|center_vertical"
+                android:paddingRight="10dp">
+
+                <ImageView
+                    android:id="@+id/view_logo"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:background="@drawable/flomate_logo"/>
+                    <!--android:background="@mipmap/ic_launcher" />-->
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_gravity="right"
                 android:gravity="right|end|center_vertical"
                 android:paddingRight="10dp">
+
 
                 <Button
                     android:id="@+id/btn_mypage"

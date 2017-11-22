@@ -9,125 +9,25 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="10"
-        android:padding="10dp">
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="식물의 정보를 직접 등록해보세요."
-            android:textColor="#000000"
-            android:textSize="15sp"
-            android:textStyle="bold"
-            android:layout_gravity="bottom"
-            />
-    </LinearLayout>
-    
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="10"
-        android:padding="10dp">
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="정보는 언제든지 다시 변경할 수 있습니다."
-            android:textColor="#000000"
-            android:textSize="15sp"
-            android:layout_gravity="top" />
-    </LinearLayout>
+        android:layout_weight="50"
+        android:gravity="center"
+        android:orientation="vertical">
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#9e9e9e" />
+        <ImageView
+            android:id="@+id/google_icon"
+            style="@style/ThemeOverlay.FirebaseIcon"
+            android:layout_width="250dp"
+            android:layout_height="250dp"
+            android:contentDescription="@string/desc_firebase_lockup"
+            android:src="@drawable/flomate_main" />
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="80"
+        android:layout_weight="50"
         android:orientation="vertical"
-        android:weightSum="10">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:background="@color/grey_100"
-            android:padding="10dp"
-            android:gravity="start|center">
-
-            <ImageView
-                android:layout_width="15sp"
-                android:layout_height="15sp"
-                android:paddingLeft="@dimen/album_title_padding"
-                android:paddingRight="@dimen/album_title_padding"
-                android:background="@drawable/name"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:text="이름"
-                android:textSize="15sp"
-                android:textStyle="bold"
-                android:ellipsize="end"
-                android:textColor="#000000"
-                android:id="@+id/textName" />
-        </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#9e9e9e" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:orientation="horizontal"
-                android:weightSum="10">
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="9"
-                    android:padding="10dp"
-                    android:gravity="start|center" >
-                    <ImageView
-                        android:layout_width="15sp"
-                        android:layout_height="15sp"
-                        android:background="@null"
-                        android:paddingLeft="@dimen/album_title_padding"
-                        android:paddingRight="@dimen/album_title_padding" />
-
-                    <TextView
-                        android:id="@+id/currentName"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                        android:ellipsize="end"
-                        android:text="현재이름"
-                        android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:textColor="#000000"
-                        android:textSize="15sp" />
-                </LinearLayout>
-
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:padding="10dp"
-                    android:gravity="start|center" >
-
-                    <ImageButton
-                        android:id="@+id/editName"
-                        android:layout_width="15sp"
-                        android:layout_height="15sp"
-                        android:layout_gravity="center"
-                        android:background="@drawable/pencil" />
-                </LinearLayout>
-        </LinearLayout>
+        android:weightSum="6">
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
@@ -145,18 +45,18 @@
                 android:layout_height="15sp"
                 android:paddingLeft="@dimen/album_title_padding"
                 android:paddingRight="@dimen/album_title_padding"
-                android:background="@drawable/birth"/>
+                android:background="@drawable/ic_email_black_24dp"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:text="생일"
+                android:text="이메일"
                 android:textSize="15sp"
                 android:textStyle="bold"
                 android:ellipsize="end"
                 android:textColor="#000000"
-                android:id="@+id/textBirth" />
+                android:id="@+id/textEmail" />
         </LinearLayout>
 
         <View
@@ -185,12 +85,12 @@
                     android:paddingRight="@dimen/album_title_padding" />
 
                 <TextView
-                    android:id="@+id/currentBirth"
+                    android:id="@+id/currentEmail"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/activity_horizontal_margin"
                     android:ellipsize="end"
-                    android:text="현재생일"
+                    android:text="현재이메일"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:textColor="#000000"
                     android:textSize="15sp" />
@@ -203,184 +103,6 @@
                 android:layout_weight="1"
                 android:padding="10dp"
                 android:gravity="start|center" >
-
-                <ImageButton
-                    android:id="@+id/editBirth"
-                    android:layout_width="15sp"
-                    android:layout_height="15sp"
-                    android:layout_gravity="center"
-                    android:background="@drawable/pencil" />
-            </LinearLayout>
-        </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#9e9e9e" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:background="@color/grey_100"
-            android:padding="10dp"
-            android:gravity="start|center">
-
-            <ImageView
-                android:layout_width="15sp"
-                android:layout_height="15sp"
-                android:paddingLeft="@dimen/album_title_padding"
-                android:paddingRight="@dimen/album_title_padding"
-                android:background="@drawable/leaf"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:text="종류"
-                android:textSize="15sp"
-                android:textStyle="bold"
-                android:ellipsize="end"
-                android:textColor="#000000"
-                android:id="@+id/textType" />
-        </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#9e9e9e" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:orientation="horizontal"
-            android:weightSum="10">
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="9"
-                android:padding="10dp"
-                android:gravity="start|center" >
-                <ImageView
-                    android:layout_width="15sp"
-                    android:layout_height="15sp"
-                    android:background="@null"
-                    android:paddingLeft="@dimen/album_title_padding"
-                    android:paddingRight="@dimen/album_title_padding" />
-
-                <TextView
-                    android:id="@+id/currentType"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                    android:ellipsize="end"
-                    android:text="현재종류"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="#000000"
-                    android:textSize="15sp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:padding="10dp"
-                android:gravity="start|center" >
-
-                <ImageButton
-                    android:id="@+id/editType"
-                    android:layout_width="15sp"
-                    android:layout_height="15sp"
-                    android:layout_gravity="center"
-                    android:background="@drawable/pencil" />
-            </LinearLayout>
-        </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#9e9e9e" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:background="@color/grey_100"
-            android:padding="10dp"
-            android:gravity="start|center">
-
-            <ImageView
-                android:layout_width="15sp"
-                android:layout_height="15sp"
-                android:paddingLeft="@dimen/album_title_padding"
-                android:paddingRight="@dimen/album_title_padding"
-                android:background="@drawable/growth"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:text="성장도"
-                android:textSize="15sp"
-                android:textStyle="bold"
-                android:ellipsize="end"
-                android:textColor="#000000"
-                android:id="@+id/textGrowth" />
-        </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#9e9e9e" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:orientation="horizontal"
-            android:weightSum="10">
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="9"
-                android:padding="10dp"
-                android:gravity="start|center" >
-                <ImageView
-                    android:layout_width="15sp"
-                    android:layout_height="15sp"
-                    android:background="@null"
-                    android:paddingLeft="@dimen/album_title_padding"
-                    android:paddingRight="@dimen/album_title_padding" />
-
-                <TextView
-                    android:id="@+id/currentGrowth"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                    android:ellipsize="end"
-                    android:text="현재생일"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="#000000"
-                    android:textSize="15sp" />
-            </LinearLayout>
-
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:padding="10dp"
-                android:gravity="start|center" >
-
-                <ImageButton
-                    android:id="@+id/editGrowth"
-                    android:layout_width="15sp"
-                    android:layout_height="15sp"
-                    android:layout_gravity="center"
-                    android:background="@drawable/pencil" />
             </LinearLayout>
         </LinearLayout>
 
@@ -408,12 +130,12 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:text="보호자"
+                android:text="이름"
                 android:textSize="15sp"
                 android:textStyle="bold"
                 android:ellipsize="end"
                 android:textColor="#000000"
-                android:id="@+id/textPerson" />
+                android:id="@+id/textName" />
         </LinearLayout>
 
         <View
@@ -442,30 +164,119 @@
                     android:paddingRight="@dimen/album_title_padding" />
 
                 <TextView
-                    android:id="@+id/currentPerson"
+                    android:id="@+id/currentName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/activity_horizontal_margin"
                     android:ellipsize="end"
-                    android:text="현재보호자"
+                    android:text="현재이름"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:textColor="#000000"
                     android:textSize="15sp" />
             </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:padding="10dp"
+                android:gravity="start|center" >
+            </LinearLayout>
         </LinearLayout>
+
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="#9e9e9e" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@color/grey_100"
+            android:padding="10dp"
+            android:gravity="start|center">
+
+            <ImageView
+                android:layout_width="15sp"
+                android:layout_height="15sp"
+                android:paddingLeft="@dimen/album_title_padding"
+                android:paddingRight="@dimen/album_title_padding"
+                android:background="@drawable/leaf"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:text="식물"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:ellipsize="end"
+                android:textColor="#000000"
+                android:id="@+id/textPlant" />
         </LinearLayout>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#9e9e9e" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:weightSum="10">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="9"
+                android:padding="10dp"
+                android:gravity="start|center" >
+                <ImageView
+                    android:layout_width="15sp"
+                    android:layout_height="15sp"
+                    android:background="@null"
+                    android:paddingLeft="@dimen/album_title_padding"
+                    android:paddingRight="@dimen/album_title_padding" />
+
+                <TextView
+                    android:id="@+id/currentPlant"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                    android:ellipsize="end"
+                    android:text="현재식물"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="#000000"
+                    android:textSize="15sp" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:padding="10dp"
+                android:gravity="start|center" >
+            </LinearLayout>
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#9e9e9e" />
+    </LinearLayout>
+
     <Button
-        android:id="@+id/btn_save"
+        android:id="@+id/btn_logout"
+        android:onClick="logout_onclick"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:text="로그아웃"
         android:textColor="@color/white"
-        android:text="저장"
         android:textSize="15sp"
-        android:textStyle="bold"
-        android:background="@color/colorPrimary"/>
+        android:textStyle="bold" />
 </LinearLayout>

@@ -61,9 +61,9 @@ public class AdapterQuest extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         // Get current position of item in RecyclerView to bind data and assign values from list
         MyHolder myHolder= (MyHolder) holder;
         DataQuest current = data.get(position);
-        if(current.questType == 1) myHolder.imageView.setImageResource(R.drawable.isthirsty);
+        if(current.questType == 1) myHolder.imageView.setImageResource(R.drawable.sprayer);
         else if(current.questType == 2) myHolder.imageView.setImageResource(R.drawable.iscold);
-        else if(current.questType == 3) myHolder.imageView.setImageResource(R.drawable.isdark);
+        else if(current.questType == 3) myHolder.imageView.setImageResource(R.drawable.light);
         myHolder.textContent.setText(current.questContent);
         myHolder.textComplete.setText("퀘스트 완료시 친밀도 5상승!");
         myHolder.textTime.setText(current.questDate);

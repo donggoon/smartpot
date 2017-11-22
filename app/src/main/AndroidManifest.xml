@@ -104,24 +104,6 @@
             </intent-filter>
         </service>
 
-        <service
-            android:name="inandout.pliend.service.PersistentService"
-            android:enabled="true"
-            android:process=":remote" >
-        </service>
-
-        <receiver
-            android:name="inandout.pliend.service.RestartService"
-            android:enabled="true"
-            android:exported="false"
-            android:label="RestartService"
-            android:process=":remote" >
-            <intent-filter>
-                <action android:name="ACTION.RESTART.PersistentService" />
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-            </intent-filter>
-        </receiver>
-
     </application>
 
 </manifest>

@@ -4,7 +4,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
+import inandout.pliend.app.AppController;
 import inandout.pliend.fragment.AnalyzeFragment;
+import inandout.pliend.fragment.DisplayFragment;
 import inandout.pliend.fragment.PlantFragment;
 import inandout.pliend.fragment.MachineFragment;
 import inandout.pliend.fragment.QuestFragment;
@@ -41,7 +43,7 @@ public class TabPagerAdapter extends FragmentStatePagerAdapter {
             case 3:
                 /*AnalyzeFragment analyzeFragment = new AnalyzeFragment();
                 return analyzeFragment;*/
-                result = new AnalyzeFragment();
+                result = new DisplayFragment();
                 break;
             default:
                 // return null;
@@ -59,6 +61,7 @@ public class TabPagerAdapter extends FragmentStatePagerAdapter {
     @Override
     public int getItemPosition(Object object) {
         // POSITION_NONE makes it possible to reload the PagerAdapter
-        return POSITION_UNCHANGED;
+        return POSITION_NONE;
+        // return POSITION_UNCHANGED;
     }
 }

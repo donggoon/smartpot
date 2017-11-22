@@ -15,6 +15,8 @@ public class AppConfig {
 	// Server data input url
 	public static String URL_ADD_PLANT = "http://" + ip + "/yamyam_api/addplant.php";
 
+	public static String URL_REG_SENSOR = "http://13.124.153.76:3000/regsensor";
+	public static String URL_LOAD_SENSOR = "http://13.124.153.76:3000/loadsensor";
 	public static String URL_REG_PLANT = "http://13.124.153.76:3000/regplant";
 	public static String URL_MOD_PLANT = "http://13.124.153.76:3000/modplant";
 

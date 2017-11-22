@@ -30,12 +30,15 @@ import android.widget.Toast;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import org.w3c.dom.Text;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 
 import inandout.pliend.R;
+import inandout.pliend.app.AppController;
 import inandout.pliend.helper.SQLiteHandler;
 import inandout.pliend.helper.SessionManager;
 
@@ -43,6 +46,7 @@ public class MypageActivity extends AppCompatActivity{
     private SQLiteHandler db;
     TextView textName;
     TextView textEmail;
+    TextView textPlant;
     private SessionManager session;
 
     private static final int REQUEST_TAKE_PHOTO = 0;
@@ -66,7 +70,7 @@ public class MypageActivity extends AppCompatActivity{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_mypage);
+        setContentView(R.layout.activity_mypage_new);
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#4CAF50")));
@@ -76,8 +80,8 @@ public class MypageActivity extends AppCompatActivity{
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
 
-        ivCapture = (ImageView)findViewById(R.id.insert_picture);
         session = new SessionManager(getApplicationContext());
+        /*ivCapture = (ImageView)findViewById(R.id.insert_picture);
 
         getSharedPreferences = getSharedPreferences("image", MODE_PRIVATE);
         String image = getSharedPreferences.getString("imagestrings","");
@@ -85,10 +89,10 @@ public class MypageActivity extends AppCompatActivity{
         Drawable dr = getDrawableFromBitmap(bit);
 
         ivCapture.setBackground(null);
-        ivCapture.setBackground(dr);
+        ivCapture.setBackground(dr);*/
 
         if(Build.VERSION.SDK_INT>=21){
-            getWindow().setStatusBarColor(Color.parseColor("#43A047"));
+            getWindow().setStatusBarColor(Color.parseColor("#000000"));
         }
 
         /*mAuth = FirebaseAuth.getInstance();
@@ -102,17 +106,19 @@ public class MypageActivity extends AppCompatActivity{
         /*String name = mUser.getDisplayName();
         String email = mUser.getEmail();*/
 
-        textName = (TextView) findViewById(R.id.textName);
-        textEmail= (TextView) findViewById(R.id.textEmail);
+        textName = (TextView) findViewById(R.id.currentName);
+        textEmail= (TextView) findViewById(R.id.currentEmail);
+        textPlant = (TextView) findViewById(R.id.currentPlant);
 
         textName.setText(name);
         textEmail.setText(email);
+        textPlant.setText(AppController.getInstance().getPlantName());
     }
 
-    public void pwchange_onclick(View v){
+    /*public void pwchange_onclick(View v){
         Intent i = new Intent(MypageActivity.this, PwchangeActivity.class);
         startActivity(i);
-    }
+    }*/
 
     public void logout_onclick(View v){
         logoutUser();
@@ -136,8 +142,8 @@ public class MypageActivity extends AppCompatActivity{
     //사용자가 지정한 사진이 되도록
     //코드수정해야됨
     //식물 추가에서도 똑같이 해야됨
-    public void insert_picture_onclick(View v){
-          /* if(v.getId()==R.id.btn_signupfinish){
+    /*public void insert_picture_onclick(View v){
+          *//* if(v.getId()==R.id.btn_signupfinish){
             SharedPreferences prefs = getSharedPreferences("login",0);
 
             String user_name = prefs.getString("USER_NAME","");
@@ -146,7 +152,7 @@ public class MypageActivity extends AppCompatActivity{
             Intent mainIntent = new Intent(SingUpPhotoActivity.this, LoginActivity.class);
             SignUpPhotoActivity.this.startActivity(mainIntent);
             SignUpPhotoActivity.this.finish();
-        }*/
+        }*//*
         if(v.getId() == R.id.insert_picture){
             DialogInterface.OnClickListener cameraListener = new DialogInterface.OnClickListener(){
                 @Override
@@ -236,18 +242,18 @@ public class MypageActivity extends AppCompatActivity{
                 ivCapture.setImageBitmap(photo);
                 //Bitmap photo = BitmapFactory.decodeFile(mCurrentPhotoPath);
                 // photo가져올 때 옵션 지정 가능, 아래는 예
-              /*  BitmapFactory.Options options = new BitmapFactory.Options();
+              *//*  BitmapFactory.Options options = new BitmapFactory.Options();
                 options.inInputShareable = true;
                 options.inDither=false;
                 options.inTempStorage=new byte[32 * 1024];
                 options.inPurgeable = true;
-                options.inJustDecodeBounds = false;*/
+                options.inJustDecodeBounds = false;*//*
 
 
                 break;
 
         }
-    }
+    }*/
 
     private void logoutUser() {
         session.setLogin(false);
@@ -255,13 +261,13 @@ public class MypageActivity extends AppCompatActivity{
         db.deleteUsers();
         // Launching the login activity
 
-        Intent intent = new Intent(MypageActivity.this, SignInActivity.class);
+        Intent intent = new Intent(MypageActivity.this, MainActivity.class);
         startActivity(intent);
         finish();
     }
 
 
-    private void dispatchTakePictureIntent() {
+    /*private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
             File photoFile = null;
@@ -305,7 +311,7 @@ public class MypageActivity extends AppCompatActivity{
     private void cropImage() {
         Intent cropIntent = new Intent("com.android.camera.action.CROP");
 
-        cropIntent.setDataAndType(photoURI, "image/*");
+        cropIntent.setDataAndType(photoURI, "image*//*");
         cropIntent.putExtra("scale", true);
         cropIntent.putExtra("output", photoURI); // 크랍된 이미지를 해당 경로에 저장
         startActivityForResult(cropIntent, REQUEST_IMAGE_CROP);
@@ -341,7 +347,7 @@ public class MypageActivity extends AppCompatActivity{
         Bitmap src = BitmapFactory.decodeResource(resources, id, options);
         Bitmap resized = Bitmap.createScaledBitmap(src, width, height, true);
         return resized;
-    }
+    }*/
 
 
 }

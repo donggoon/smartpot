@@ -4,14 +4,14 @@
     android:id="@+id/main_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary"
+    android:background="@color/white"
     android:orientation="vertical"
     android:weightSum="5">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="2"
+        android:layout_weight="2.2"
         android:gravity="center"
         android:orientation="vertical">
 
@@ -19,9 +19,9 @@
             style="@style/ThemeOverlay.FirebaseIcon"
             android:id="@+id/google_icon"
             android:contentDescription="@string/desc_firebase_lockup"
-            android:src="@drawable/flomate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:src="@drawable/flomate_main"
+            android:layout_width="250dp"
+            android:layout_height="250dp" />
     </LinearLayout>
 
     <LinearLayout
@@ -44,9 +44,9 @@
             android:padding="10dp"
             android:singleLine="true"
             android:textCursorDrawable="@null"
-            android:textColor="@color/input_login"
-            android:background="@color/windowBackground"
-            android:textColorHint="@color/input_login" />
+            android:textColor="@color/white"
+            android:background="@color/colorPrimary"
+            android:textColorHint="@color/white" />
 
         <EditText
             android:id="@+id/password"
@@ -58,9 +58,9 @@
             android:padding="10dp"
             android:singleLine="true"
             android:textCursorDrawable="@null"
-            android:background="@color/windowBackground"
-            android:textColor="@color/input_login"
-            android:textColorHint="@color/input_login" />
+            android:background="@color/colorPrimary"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white" />
 
         <Button
             android:id="@+id/btnLogin"
@@ -76,7 +76,7 @@
         <com.google.android.gms.common.SignInButton
             android:id="@+id/sign_in_button"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"/>
 
         <Button
             android:id="@+id/btn_link_to_register_screen"
@@ -84,7 +84,7 @@
             android:layout_height="wrap_content"
             android:background="@null"
             android:textAllCaps="false"
-            android:textColor="@color/windowBackground"
+            android:textColor="@color/black"
             android:text="@string/btn_link_to_register"
             android:textSize="15dp" />
     </LinearLayout>
